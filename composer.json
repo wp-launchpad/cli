@@ -1,0 +1,23 @@
+{
+  "name": "crochetfeve0251/psr2-plugin-builder",
+  "description": "Builder library for psr2 plugin",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "type": "library",
+  "authors": [
+    {
+      "name": "coquardcyr",
+      "email": "coquardcyr@gmail.com"
+    }
+  ],
+  "require": {
+    "splitbrain/php-cli": "^1.2",
+    "league/climate": "^3.8",
+    "league/flysystem": "^2.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "PSR2PluginBuilder\\": "inc/"
+    }
+  }
+}
