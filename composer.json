@@ -11,9 +11,9 @@
     }
   ],
   "require": {
-    "splitbrain/php-cli": "^1.2",
-    "league/climate": "^3.8",
-    "league/flysystem": "^2.5"
+    "league/flysystem": "^2.5",
+    "adhocore/cli": "^v0.9.0",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {

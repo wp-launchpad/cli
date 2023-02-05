@@ -1,6 +1,6 @@
 <?php
 
-namespace Templating;
+namespace PSR2PluginBuilder\Templating;
 
 class Renderer
 {
@@ -31,7 +31,7 @@ class Renderer
      */
     public function get_template(string $template): string
     {
-        $template_file = $this->templates_folder . '/' . $template . '.tpl';
+        $template_file = $this->templates_folder . $template;
 
         if (!is_file($template_file)) {
             throw new FileNotFoundException("Template file not found.");
