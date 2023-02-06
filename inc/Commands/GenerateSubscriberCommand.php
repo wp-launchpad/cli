@@ -5,15 +5,23 @@ namespace PSR2PluginBuilder\Commands;
 use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
 use PSR2PluginBuilder\Entities\Configurations;
+use PSR2PluginBuilder\Services\ClassGenerator;
 use PSR2PluginBuilder\Templating\Renderer;
 
 class GenerateSubscriberCommand extends Command
 {
     protected $name;
 
-    public function __construct(Filesystem $filesystem, Renderer $renderer, Configurations $configurations)
+    /**
+     * @var ClassGenerator
+     */
+    protected $class_generator;
+
+    public function __construct(ClassGenerator $class_generator)
     {
-        parent::__construct('subscriber', 'Generate subscriber class', $filesystem, $renderer, $configurations);
+        parent::__construct('subscriber', 'Generate subscriber class');
+
+        $this->class_generator = $class_generator;
 
         $this
             ->argument('<name>', 'Full name from the subscriber')
@@ -27,41 +35,18 @@ class GenerateSubscriberCommand extends Command
             );
     }
 
-    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
-    public function interact(Interactor $io)
-    {
-
-        // ...
-    }
-
     // When app->handle() locates `init` command it automatically calls `execute()`
     // with correct $ball and $apple values
     public function execute($name)
     {
-        $basename = basename( $name );
-        $namespace = implode('\\', array_slice(explode('/', $name), 0, -1));
         $io = $this->app()->io();
 
-        $base_namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
+        $path = $this->class_generator->generate('subscriber.php.tpl', $name);
 
-        $path = str_replace(
-                [$base_namespace, "/"],
-                [$this->configurations->getCodeDir(), DIRECTORY_SEPARATOR],
-                $name
-            ) . '.php';
-
-        if( $this->filesystem->fileExists($path)) {
+        if( ! $path ) {
             $io->write("The class already exists", true);
             return;
         }
-
-        $content = $this->renderer->apply_template('subscriber.php.tpl', [
-            'namespace' => $namespace,
-            'base_namespace' => $this->configurations->getBaseNamespace(),
-            'class_name' => $basename
-        ]);
-
-        $this->filesystem->write($path, $content);
 
         $io->write("The subscriber is created at this path: $path", true);
     }

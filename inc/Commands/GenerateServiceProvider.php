@@ -4,15 +4,20 @@ namespace PSR2PluginBuilder\Commands;
 
 use League\Flysystem\Filesystem;
 use PSR2PluginBuilder\Entities\Configurations;
+use PSR2PluginBuilder\Services\ClassGenerator;
 use PSR2PluginBuilder\Templating\Renderer;
 
 class GenerateServiceProvider extends Command
 {
     protected $name;
 
-    public function __construct(Filesystem $filesystem, Renderer $renderer, Configurations $configurations)
+    protected $class_generator;
+
+    public function __construct(ClassGenerator $class_generator)
     {
-        parent::__construct('provider', 'Generate service provider class', $filesystem, $renderer, $configurations);
+        parent::__construct('provider', 'Generate service provider class');
+
+        $this->class_generator = $class_generator;
 
         $this
             ->argument('<name>', 'Full name from the service provider')
@@ -29,30 +34,14 @@ class GenerateServiceProvider extends Command
     // with correct $ball and $apple values
     public function execute($name)
     {
-        $basename = basename( $name );
-        $namespace = implode('\\', array_slice(explode('/', $name), 0, -1));
         $io = $this->app()->io();
 
-        $base_namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
+        $path = $this->class_generator->generate('serviceprovider.php.tpl', $name );
 
-        $path = str_replace(
-                [$base_namespace, "/"],
-                [$this->configurations->getCodeDir(), DIRECTORY_SEPARATOR],
-                $name
-            ) . '.php';
-
-        if( $this->filesystem->fileExists($path)) {
+        if( ! $path ) {
             $io->write("The class already exists", true);
             return;
         }
-
-        $content = $this->renderer->apply_template('serviceprovider.php.tpl', [
-            'namespace' => $namespace,
-            'base_namespace' => $this->configurations->getBaseNamespace(),
-            'class_name' => $basename
-        ]);
-
-        $this->filesystem->write($path, $content);
 
         $io->write("The service provider is created at this path: $path", true);
     }

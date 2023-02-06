@@ -7,8 +7,10 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PSR2PluginBuilder\Commands\GenerateServiceProvider;
 use PSR2PluginBuilder\Commands\GenerateSubscriberCommand;
+use PSR2PluginBuilder\Commands\GenerateTableCommand;
 use PSR2PluginBuilder\Commands\GenerateTestsCommand;
 use PSR2PluginBuilder\Entities\Configurations;
+use PSR2PluginBuilder\Services\ClassGenerator;
 use PSR2PluginBuilder\Templating\Renderer;
 
 class BaseServiceProvider implements ServiceProviderInterface
@@ -52,8 +54,11 @@ class BaseServiceProvider implements ServiceProviderInterface
 
     public function attach_commands(Application $app): Application
     {
-        $app->add(new GenerateSubscriberCommand($this->filesystem, $this->renderer, $this->configs));
-        $app->add(new GenerateServiceProvider($this->filesystem, $this->renderer, $this->configs));
+        $class_generator = new ClassGenerator($this->filesystem, $this->renderer, $this->configs);
+
+        $app->add(new GenerateSubscriberCommand($class_generator));
+        $app->add(new GenerateServiceProvider($class_generator));
+        $app->add(new GenerateTableCommand($class_generator, $this->configs));
         $app->add(new GenerateTestsCommand($this->filesystem, $this->renderer, $this->configs));
         return $app;
     }

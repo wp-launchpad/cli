@@ -32,7 +32,7 @@ class Renderer
     public function get_template(string $template): string
     {
         $template_file = $this->templates_folder . $template;
-
+var_dump($template_file);
         if (!is_file($template_file)) {
             throw new FileNotFoundException("Template file not found.");
         }
