@@ -5,6 +5,7 @@ namespace PSR2PluginBuilder;
 use Ahc\Cli\Application;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use PSR2PluginBuilder\ServiceProviders\BaseServiceProvider;
 use PSR2PluginBuilder\ServiceProviders\ServiceProviderInterface;
 use PSR2PluginBuilder\Services\ConfigurationResolver;
 
@@ -14,10 +15,14 @@ class AppBuilder
     /**
      * @param string[] $service_providers
      */
-    public static function init(string $project_dir, array $service_providers)
+    public static function init(string $project_dir, array $service_providers = [])
     {
         $app = new Application('PS2 plugin builder');
         $app->logo('Ascii art logo of your app');
+
+        $service_providers = array_merge($service_providers, [
+            BaseServiceProvider::class,
+        ]);
 
         $adapter = new LocalFilesystemAdapter(
         // Determine root directory
