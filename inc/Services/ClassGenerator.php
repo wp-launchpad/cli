@@ -39,6 +39,24 @@ class ClassGenerator
         return basename( $name );
     }
 
+    public function get_fullname( string $name ): string {
+        return '\\' . str_replace('/', '\\', $name);
+    }
+
+    public function generate_path( string $name, bool $is_test = false ): string {
+        $base_namespace = $is_test ? $this->configurations->getBaseNamespace() . 'Tests\\': $this->configurations->getBaseNamespace();
+
+        $base_namespace = str_replace('\\', '/', $base_namespace);
+
+        $code_dir = $is_test ? $this->configurations->getTestDir() : $this->configurations->getCodeDir();
+
+        return str_replace(
+                [$base_namespace, "/"],
+                [$code_dir, DIRECTORY_SEPARATOR],
+                $name
+            ) . '.php';
+    }
+
     public function generate(string $template, string $class_name, array $variables = [], bool $is_test = false) {
         $basename = $this->get_basename( $class_name );
         $namespace = implode('\\', array_slice(explode('/', $class_name), 0, -1));

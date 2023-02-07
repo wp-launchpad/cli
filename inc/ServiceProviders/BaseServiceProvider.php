@@ -57,7 +57,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         $class_generator = new ClassGenerator($this->filesystem, $this->renderer, $this->configs);
 
         $app->add(new GenerateSubscriberCommand($class_generator));
-        $app->add(new GenerateServiceProvider($class_generator));
+        $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
         $app->add(new GenerateTableCommand($class_generator, $this->configs));
         $app->add(new GenerateTestsCommand($class_generator, $this->configs));
         return $app;

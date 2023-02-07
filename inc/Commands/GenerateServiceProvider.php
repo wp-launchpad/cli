@@ -5,7 +5,6 @@ namespace PSR2PluginBuilder\Commands;
 use League\Flysystem\Filesystem;
 use PSR2PluginBuilder\Entities\Configurations;
 use PSR2PluginBuilder\Services\ClassGenerator;
-use PSR2PluginBuilder\Templating\Renderer;
 
 class GenerateServiceProvider extends Command
 {
@@ -13,10 +12,16 @@ class GenerateServiceProvider extends Command
 
     protected $class_generator;
 
-    public function __construct(ClassGenerator $class_generator)
+    protected $filesystem;
+
+    protected $configurations;
+
+    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, Configurations $configurations)
     {
         parent::__construct('provider', 'Generate service provider class');
 
+        $this->filesystem = $filesystem;
+        $this->configurations = $configurations;
         $this->class_generator = $class_generator;
 
         $this
@@ -44,5 +49,19 @@ class GenerateServiceProvider extends Command
         }
 
         $io->write("The service provider is created at this path: $path", true);
+
+        $plugin_path = $this->configurations->getCodeDir() . 'Plugin.php';
+
+        $plugin_content = $this->filesystem->read($plugin_path);
+
+         preg_match('/\$providers = \[(?<content>[^]]*)];/', $plugin_content, $content);
+        $content = $content['content'] . " " . $this->class_generator->get_fullname($name) . "::class,\n";
+        $plugin_content = preg_replace('/\$providers = \[(?<content>[^\]])*];/', "\$providers = [$content           ];", $plugin_content);
+
+        if(! $plugin_content) {
+            return;
+        }
+
+        $this->filesystem->write($plugin_path, $plugin_content);
     }
 }

@@ -26,10 +26,9 @@ class GenerateTestsCommand extends Command
             ->option('-t --type', 'Type from the test')
             // Usage examples:
             ->usage(
-            // append details or explanation of given example with ` ## ` so they will be uniformly aligned when shown
-                '<bold>  init</end> <comment>--apple applet --ball ballon <arggg></end> ## details 1<eol/>' .
-                // $0 will be interpolated to actual command name
-                '<bold>  $0</end> <comment>-a applet -b ballon <arggg> [arg2]</end> ## details 2<eol/>'
+                '<bold>  test</end> <comment>MyNamespace/ClassName::method --type both</end> ## creates both tests<eol/>' .
+                '<bold>  test</end> <comment>MyNamespace/ClassName::method --type unit</end> ## creates unit test<eol/>' .
+                '<bold>  test</end> <comment>MyNamespace/ClassName::method --type integration</end> ## creates integration test<eol/>'
             );
     }
 
