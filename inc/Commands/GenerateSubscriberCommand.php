@@ -4,11 +4,13 @@ namespace PSR2PluginBuilder\Commands;
 
 use League\Flysystem\Filesystem;
 use PSR2PluginBuilder\Services\ClassGenerator;
+use PSR2PluginBuilder\Templating\Renderer;
 
 class GenerateSubscriberCommand extends Command
 {
     protected $name;
 
+    protected $type;
     /**
      * @var ClassGenerator
      */
@@ -19,12 +21,18 @@ class GenerateSubscriberCommand extends Command
      */
     protected $filesystem;
 
-    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem)
+    /**
+     * @var Renderer
+     */
+    protected $renderer;
+
+    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, Renderer $renderer)
     {
         parent::__construct('subscriber', 'Generate subscriber class');
 
         $this->class_generator = $class_generator;
         $this->filesystem = $filesystem;
+        $this->renderer = $renderer;
 
         $this
             ->argument('<name>', 'Full name from the subscriber')
@@ -40,7 +48,7 @@ class GenerateSubscriberCommand extends Command
 
     // When app->handle() locates `init` command it automatically calls `execute()`
     // with correct $ball and $apple values
-    public function execute($name)
+    public function execute($name, $type)
     {
         $io = $this->app()->io();
 
@@ -76,6 +84,18 @@ class GenerateSubscriberCommand extends Command
         $content = $content['content'] . " \$this->getContainer()->share('" . $id_subscriber . "', $full_name::class);\n";
 
         $plugin_content = preg_replace('/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n{\n$content}", $plugin_content);
+        if( ! $type || $type === 'c' || $type === 'common') {
+            $plugin_content = $this->add_to_subscriber_method($id_subscriber, 'get_common_subscribers', $plugin_content);
+        }
+
+        if($type === 'a' || $type === 'admin') {
+            $plugin_content = $this->add_to_subscriber_method($id_subscriber, 'get_admin_subscribers', $plugin_content);
+        }
+
+        if($type === 'f' || $type === 'front') {
+            $plugin_content = $this->add_to_subscriber_method($id_subscriber, 'get_front_subscribers', $plugin_content);
+        }
+
 
         if(! $plugin_content) {
             return;
@@ -83,5 +103,20 @@ class GenerateSubscriberCommand extends Command
 
         $this->filesystem->write($service_provider_path, $plugin_content);
 
+    }
+
+    protected function add_to_subscriber_method($id, string $method, string $content): string {
+        if(! preg_match('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', $content,
+            $results)) {
+            preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
+            $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
+                'ids' => "'$id',"
+            ]);
+            $results = $results['content'] . $new_content;
+            return preg_replace('/(?<content>\$provides = \[[^]]*];)/', $results, $content);
+        }
+        $results = $results['content'] . " '" . $id . "',\n";
+
+        return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n{\n$results}", $content);
     }
 }
