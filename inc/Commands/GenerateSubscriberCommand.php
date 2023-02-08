@@ -2,11 +2,8 @@
 
 namespace PSR2PluginBuilder\Commands;
 
-use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\Entities\Configurations;
 use PSR2PluginBuilder\Services\ClassGenerator;
-use PSR2PluginBuilder\Templating\Renderer;
 
 class GenerateSubscriberCommand extends Command
 {
@@ -17,11 +14,17 @@ class GenerateSubscriberCommand extends Command
      */
     protected $class_generator;
 
-    public function __construct(ClassGenerator $class_generator)
+    /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem)
     {
         parent::__construct('subscriber', 'Generate subscriber class');
 
         $this->class_generator = $class_generator;
+        $this->filesystem = $filesystem;
 
         $this
             ->argument('<name>', 'Full name from the subscriber')
@@ -49,5 +52,36 @@ class GenerateSubscriberCommand extends Command
         }
 
         $io->write("The subscriber is created at this path: $path", true);
+
+        $service_provider_name = $this->class_generator->get_dirname( $name ) . '/ServiceProvider';
+        $service_provider_path = $this->class_generator->generate_path( $service_provider_name );
+
+        if( ! $this->class_generator->exists( $service_provider_name ) ) {
+            $this->app()->launchCommand(GenerateServiceProvider::class, [
+                false,
+                $service_provider_name
+            ]);
+        }
+
+        $plugin_content = $this->filesystem->read( $service_provider_path );
+
+        $full_name = $this->class_generator->get_fullname($name);
+        $id_subscriber = $this->class_generator->create_id( $full_name );
+
+        preg_match('/\$provides = \[(?<content>[^]]*)];/', $plugin_content, $content);
+        $content = $content['content'] . " '" . $id_subscriber . "',\n";
+        $plugin_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content           ];", $plugin_content);
+
+        preg_match('/public function register\(\)[^}]*{(?<content>[^}]*)}/', $plugin_content, $content);
+        $content = $content['content'] . " \$this->getContainer()->share('" . $id_subscriber . "', $full_name::class);\n";
+
+        $plugin_content = preg_replace('/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n{\n$content}", $plugin_content);
+
+        if(! $plugin_content) {
+            return;
+        }
+
+        $this->filesystem->write($service_provider_path, $plugin_content);
+
     }
 }
