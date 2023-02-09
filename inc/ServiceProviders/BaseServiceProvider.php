@@ -2,6 +2,7 @@
 
 namespace PSR2PluginBuilder\ServiceProviders;
 
+use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PSR2PluginBuilder\App;
@@ -42,7 +43,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         $this->configs = $configs;
         $this->project_dir = $project_dir;
         // The internal adapter
-        $adapter = new LocalFilesystemAdapter(
+        $adapter = new Local(
         // Determine root directory
             $this->project_dir
         );

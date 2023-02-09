@@ -44,9 +44,10 @@ class ProviderManager
     }
 
     public function maybe_generate_service_provider(string $namespace ) {
-        $service_provider_name = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider.php';
+        $service_provider_path = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider.php';
+        $service_provider_name = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider';
 
-        if( ! $this->class_generator->exists( $service_provider_name ) ) {
+        if( ! $this->class_generator->exists( $service_provider_path ) ) {
             $this->app->launchCommand(GenerateServiceProvider::class, [
                 false,
                 $service_provider_name
@@ -55,7 +56,7 @@ class ProviderManager
     }
 
     public function add_class(string $path, string $class) {
-        $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider.php' );
+        $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
 
         $full_name = $this->class_generator->get_fullname( $class );

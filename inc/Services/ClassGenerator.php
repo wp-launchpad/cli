@@ -49,7 +49,7 @@ class ClassGenerator
 
     public function exists( string $name ): bool {
 
-        return $this->filesystem->fileExists($this->generate_path( $name ) );
+        return $this->filesystem->has($this->generate_path( $name ) );
     }
 
     public function create_id(string $class ) {
@@ -88,7 +88,7 @@ class ClassGenerator
                 $class_name
             ) . '.php';
 
-        if( $this->filesystem->fileExists($path)) {
+        if( $this->filesystem->has($path)) {
             return false;
         }
 

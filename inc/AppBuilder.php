@@ -2,6 +2,7 @@
 
 namespace PSR2PluginBuilder;
 
+use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PSR2PluginBuilder\ServiceProviders\BaseServiceProvider;
@@ -23,10 +24,7 @@ class AppBuilder
             BaseServiceProvider::class,
         ]);
 
-        $adapter = new LocalFilesystemAdapter(
-        // Determine root directory
-            $project_dir
-        );
+        $adapter = new Local($project_dir);
 
         // The FilesystemOperator
         $filesystem = new Filesystem($adapter);

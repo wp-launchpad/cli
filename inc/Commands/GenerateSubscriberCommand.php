@@ -63,22 +63,23 @@ class GenerateSubscriberCommand extends Command
 
         $io->write("The subscriber is created at this path: $path", true);
 
-        $service_provider_name = $this->class_generator->get_dirname( $name ) . '/ServiceProvider';
-        $service_provider_path = $this->class_generator->generate_path( $service_provider_name );
+        $service_provider_name = $this->class_generator->get_dirname( $name );
         $id_subscriber = $this->class_generator->create_id( $name );
 
-        $this->service_provider_manager->add_class($service_provider_path, $name);
+        $this->service_provider_manager->maybe_generate_service_provider($name);
+
+        $this->service_provider_manager->add_class($service_provider_name, $name);
 
         if( ! $type || $type === 'c' || $type === 'common') {
-            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_path, new SubscriberType(SubscriberType::COMMON));
+            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_name, new SubscriberType(SubscriberType::COMMON));
         }
 
         if($type === 'a' || $type === 'admin') {
-            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_path, new SubscriberType(SubscriberType::ADMIN));
+            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_name, new SubscriberType(SubscriberType::ADMIN));
         }
 
         if($type === 'f' || $type === 'front') {
-            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_path, new SubscriberType(SubscriberType::FRONT));
+            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_name, new SubscriberType(SubscriberType::FRONT));
         }
 
     }
