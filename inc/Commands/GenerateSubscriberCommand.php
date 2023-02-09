@@ -3,7 +3,9 @@
 namespace PSR2PluginBuilder\Commands;
 
 use League\Flysystem\Filesystem;
+use PSR2PluginBuilder\ObjectValues\SubscriberType;
 use PSR2PluginBuilder\Services\ClassGenerator;
+use PSR2PluginBuilder\Services\ProviderManager;
 use PSR2PluginBuilder\Templating\Renderer;
 
 class GenerateSubscriberCommand extends Command
@@ -22,17 +24,17 @@ class GenerateSubscriberCommand extends Command
     protected $filesystem;
 
     /**
-     * @var Renderer
+     * @var ProviderManager
      */
-    protected $renderer;
+    protected $service_provider_manager;
 
-    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, Renderer $renderer)
+    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, ProviderManager $service_provider_manager)
     {
         parent::__construct('subscriber', 'Generate subscriber class');
 
         $this->class_generator = $class_generator;
         $this->filesystem = $filesystem;
-        $this->renderer = $renderer;
+        $this->service_provider_manager = $service_provider_manager;
 
         $this
             ->argument('<name>', 'Full name from the subscriber')
@@ -63,60 +65,21 @@ class GenerateSubscriberCommand extends Command
 
         $service_provider_name = $this->class_generator->get_dirname( $name ) . '/ServiceProvider';
         $service_provider_path = $this->class_generator->generate_path( $service_provider_name );
+        $id_subscriber = $this->class_generator->create_id( $name );
 
-        if( ! $this->class_generator->exists( $service_provider_name ) ) {
-            $this->app()->launchCommand(GenerateServiceProvider::class, [
-                false,
-                $service_provider_name
-            ]);
-        }
+        $this->service_provider_manager->add_class($service_provider_path, $name);
 
-        $plugin_content = $this->filesystem->read( $service_provider_path );
-
-        $full_name = $this->class_generator->get_fullname($name);
-        $id_subscriber = $this->class_generator->create_id( $full_name );
-
-        preg_match('/\$provides = \[(?<content>[^]]*)];/', $plugin_content, $content);
-        $content = $content['content'] . " '" . $id_subscriber . "',\n";
-        $plugin_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content           ];", $plugin_content);
-
-        preg_match('/public function register\(\)[^}]*{(?<content>[^}]*)}/', $plugin_content, $content);
-        $content = $content['content'] . " \$this->getContainer()->share('" . $id_subscriber . "', $full_name::class);\n";
-
-        $plugin_content = preg_replace('/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n{\n$content}", $plugin_content);
         if( ! $type || $type === 'c' || $type === 'common') {
-            $plugin_content = $this->add_to_subscriber_method($id_subscriber, 'get_common_subscribers', $plugin_content);
+            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_path, new SubscriberType(SubscriberType::COMMON));
         }
 
         if($type === 'a' || $type === 'admin') {
-            $plugin_content = $this->add_to_subscriber_method($id_subscriber, 'get_admin_subscribers', $plugin_content);
+            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_path, new SubscriberType(SubscriberType::ADMIN));
         }
 
         if($type === 'f' || $type === 'front') {
-            $plugin_content = $this->add_to_subscriber_method($id_subscriber, 'get_front_subscribers', $plugin_content);
+            $this->service_provider_manager->register_subscriber($id_subscriber, $service_provider_path, new SubscriberType(SubscriberType::FRONT));
         }
 
-
-        if(! $plugin_content) {
-            return;
-        }
-
-        $this->filesystem->write($service_provider_path, $plugin_content);
-
-    }
-
-    protected function add_to_subscriber_method($id, string $method, string $content): string {
-        if(! preg_match('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', $content,
-            $results)) {
-            preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
-            $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
-                'ids' => "'$id',"
-            ]);
-            $results = $results['content'] . $new_content;
-            return preg_replace('/(?<content>\$provides = \[[^]]*];)/', $results, $content);
-        }
-        $results = $results['content'] . " '" . $id . "',\n";
-
-        return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n{\n$results}", $content);
     }
 }
