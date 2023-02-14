@@ -65,10 +65,13 @@ class ProviderManager
         $content = $content['content'] . " '" . $id . "',\n";
         $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content           ];", $provider_content);
 
-        preg_match( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', $provider_content, $content );
+        preg_match( '/public function register\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/',
+            $provider_content,
+            $content );
+        $indents = $content['indents'];
         $content = $content['content'] . " \$this->getContainer()->share('" . $id . "', $full_name::class);\n";
 
-        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n{\n$content}", $provider_content );
+        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
         $this->filesystem->write( $provider_path, $provider_content );
     }
@@ -91,7 +94,7 @@ class ProviderManager
     }
 
     protected function add_to_subscriber_method($id, string $method, string $content): string {
-        if ( ! preg_match('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', $content, $results ) ) {
+        if ( ! preg_match('/public function ' . $method . '\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/', $content, $results ) ) {
             preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
             $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
                 'ids' => "'$id',"
@@ -99,9 +102,9 @@ class ProviderManager
             $results = $results['content'] . $new_content;
             return preg_replace('/(?<content>\$provides = \[[^]]*];)/', $results, $content);
         }
+        $indents = $results['indents'];
         $results = $results['content'] . " '" . $id . "',\n";
-
-        return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n{\n$results}", $content);
+        return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n$indents{\n$results$indents}", $content);
     }
 
     public function instantiate(string $class, string $path) {
@@ -111,10 +114,12 @@ class ProviderManager
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $this->class_generator->create_id( $full_name );
 
-        preg_match( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', $provider_content, $content );
+        preg_match( '/public function register\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/', $provider_content, $content );
+
+        $indents = $content['indents'];
         $content = $content['content'] . " \$this->getContainer()->get('" . $id . ");\n";
 
-        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n{\n$content}", $provider_content );
+        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
         $this->filesystem->write( $provider_path, $provider_content );
     }

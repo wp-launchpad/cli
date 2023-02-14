@@ -4,8 +4,8 @@ namespace PSR2PluginBuilder\ServiceProviders;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Local\LocalFilesystemAdapter;
 use PSR2PluginBuilder\App;
+use PSR2PluginBuilder\Commands\GenerateFixtureCommand;
 use PSR2PluginBuilder\Commands\GenerateServiceProvider;
 use PSR2PluginBuilder\Commands\GenerateSubscriberCommand;
 use PSR2PluginBuilder\Commands\GenerateTableCommand;
@@ -63,6 +63,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
         $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
         $app->add(new GenerateTestsCommand($class_generator, $this->configs));
+        $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
         return $app;
     }
 }
