@@ -73,7 +73,7 @@ class ProviderManager
 
         $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
-        $this->filesystem->write( $provider_path, $provider_content );
+        $this->filesystem->update( $provider_path, $provider_content );
     }
 
     public function register_subscriber(string $id, string $path, SubscriberType $type) {
@@ -90,7 +90,7 @@ class ProviderManager
             $provider_content = $this->add_to_subscriber_method($id, 'get_common_subscribers', $provider_content);
         }
 
-        $this->filesystem->write($provider_path, $provider_content);
+        $this->filesystem->update($provider_path, $provider_content);
     }
 
     protected function add_to_subscriber_method($id, string $method, string $content): string {
@@ -121,6 +121,6 @@ class ProviderManager
 
         $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
-        $this->filesystem->write( $provider_path, $provider_content );
+        $this->filesystem->update( $provider_path, $provider_content );
     }
 }
