@@ -41,9 +41,9 @@ class GenerateTestsCommand extends Command
 
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
-        $test_namespace_fixture = $namespace . 'Tests/Fixtures/';
-        $test_namespace_unit = $namespace . 'Tests/Unit/';
-        $test_namespace_integration = $namespace . 'Tests/Integration/';
+        $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
+        $test_namespace_unit = $namespace . 'Tests/Unit/inc/';
+        $test_namespace_integration = $namespace . 'Tests/Integration/inc/';
 
         $class_name_unit_path = str_replace($namespace, $test_namespace_unit, $class_name);
         $class_name_fixture_path = str_replace($namespace, $test_namespace_fixture, $class_name);
@@ -72,7 +72,7 @@ class GenerateTestsCommand extends Command
 
         foreach ($files as $template => $file) {
             $path = $this->class_generator->generate($template, $file, [
-                'base_class' => $class_name,
+                'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
             ], true);
 

@@ -33,7 +33,7 @@ class AppBuilder
 
         $configs = (new ConfigurationResolver($filesystem, $project_dir))->get_configuration();
         foreach ($service_providers as $service_provider) {
-            $instance = new $service_provider($configs, $project_dir);
+            $instance = new $service_provider($configs, $project_dir, __DIR__ . '/../');
             if(! $instance instanceof ServiceProviderInterface){
                 continue;
             }

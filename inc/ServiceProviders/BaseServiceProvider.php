@@ -36,7 +36,7 @@ class BaseServiceProvider implements ServiceProviderInterface
      */
     protected $project_dir;
 
-    public function __construct(Configurations $configs, string $project_dir)
+    public function __construct(Configurations $configs, string $project_dir, string $app_dir)
     {
         $this->configs = $configs;
         $this->project_dir = $project_dir;
@@ -49,7 +49,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         // The FilesystemOperator
         $this->filesystem = new Filesystem($adapter);
 
-        $this->renderer = new Renderer($this->project_dir . '/templates/');
+        $this->renderer = new Renderer($app_dir . '/templates/');
     }
 
     public function attach_commands(Application $app): Application

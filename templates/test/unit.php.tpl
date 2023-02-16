@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use {{ base_namespace }}Unit\TestCase;
+use {{ base_namespace }}Test\Unit\TestCase;
 
 /**
  * @covers {{ base_class }}::{{ base_method }}
