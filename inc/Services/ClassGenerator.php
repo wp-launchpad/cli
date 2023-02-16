@@ -39,8 +39,23 @@ class ClassGenerator
         return basename( $name );
     }
 
+    public function get_dirname( string $name): string {
+        return implode('/', array_slice(explode('/', $name), 0, -1));
+    }
+
     public function get_fullname( string $name ): string {
         return '\\' . str_replace('/', '\\', $name);
+    }
+
+    public function exists( string $name ): bool {
+
+        return $this->filesystem->has($this->generate_path( $name ) );
+    }
+
+    public function create_id(string $class ) {
+        $class = trim( $class, '\\' );
+        $class = str_replace( '\\', '.', $class );
+        return strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
     }
 
     public function generate_path( string $name, bool $is_test = false ): string {
@@ -73,7 +88,7 @@ class ClassGenerator
                 $class_name
             ) . '.php';
 
-        if( $this->filesystem->fileExists($path)) {
+        if( $this->filesystem->has($path)) {
             return false;
         }
 

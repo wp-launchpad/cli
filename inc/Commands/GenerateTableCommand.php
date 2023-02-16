@@ -4,6 +4,7 @@ namespace PSR2PluginBuilder\Commands;
 
 use PSR2PluginBuilder\Entities\Configurations;
 use PSR2PluginBuilder\Services\ClassGenerator;
+use PSR2PluginBuilder\Services\ProviderManager;
 
 class GenerateTableCommand extends Command
 {
@@ -13,12 +14,18 @@ class GenerateTableCommand extends Command
 
     protected $configurations;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations)
+    /**
+     * @var ProviderManager
+     */
+    protected $service_provider_manager;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, ProviderManager $service_provider_manager)
     {
         parent::__construct('table', 'Generate table classes');
 
         $this->class_generator = $class_generator;
         $this->configurations = $configurations;
+        $this->service_provider_manager = $service_provider_manager;
 
         $this
             ->argument('<name>', 'Name of the table')
@@ -66,5 +73,11 @@ class GenerateTableCommand extends Command
 
         }
 
+        $service_provider_name = $folder . 'Database/ServiceProvider';
+        $service_provider_path = $this->class_generator->generate_path( $service_provider_name );
+        foreach($files as $file) {
+            $this->service_provider_manager->add_class($service_provider_path, $file);
+            $this->service_provider_manager->instantiate($service_provider_path, $file);
+        }
     }
 }

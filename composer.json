@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "league/flysystem": "^2.5",
+    "league/flysystem": "^1.1.10",
     "adhocore/cli": "^v0.9.0",
     "ext-json": "*"
   },

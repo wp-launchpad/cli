@@ -2,9 +2,9 @@
 
 namespace PSR2PluginBuilder\ServiceProviders;
 
-use Ahc\Cli\Application;
+use PSR2PluginBuilder\App;
 
 interface ServiceProviderInterface
 {
-    public function attach_commands(Application $app): Application;
+    public function attach_commands(App $app): App;
 }
