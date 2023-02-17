@@ -4,6 +4,7 @@ namespace PSR2PluginBuilder\Tests\Unit\inc\Templating\Renderer;
 
 use League\Flysystem\Filesystem;
 use Mockery;
+use PSR2PluginBuilder\Templating\FileNotFoundException;
 use PSR2PluginBuilder\Templating\Renderer;
 use PSR2PluginBuilder\Tests\Unit\TestCase;
 
@@ -31,6 +32,21 @@ class Test_applyTemplate extends TestCase {
      */
     public function testShouldReturnExpected( $config, $expected )
     {
+        $this->filesystem->expects()->has($expected['template_path'])->andReturn($config['template_exists']);
+        $this->configureTemplateExists($config, $expected);
 
+        $results = $this->renderer->apply_template($config['template'], $config['variables']);
+
+        if($config['template_exists']) {
+            $this->assertSame($expected['content'], $results);
+        }
+    }
+
+    protected function configureTemplateExists($config, $expected) {
+        if(!$config['template_exists']) {
+            $this->expectException(FileNotFoundException::class);
+            return;
+        }
+        $this->filesystem->expects()->read($expected['template_path'])->andReturn($config['content']);
     }
 }
