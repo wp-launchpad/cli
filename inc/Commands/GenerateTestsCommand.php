@@ -121,7 +121,7 @@ class GenerateTestsCommand extends Command
         }
 
         return array_values(array_filter($results['name'], function ($result) {
-            if(preg_match('/__\w+/', $result)) {
+            if(preg_match('/^__\w+/', $result)) {
                 return false;
             }
             return $result;
