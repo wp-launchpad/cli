@@ -2,24 +2,25 @@
 
 namespace PSR2PluginBuilder\Commands;
 
+use League\Flysystem\Filesystem;
 use PSR2PluginBuilder\Entities\Configurations;
 use PSR2PluginBuilder\Services\ClassGenerator;
 
 class GenerateTestsCommand extends Command
 {
-
-    protected $method;
-
     protected $class_generator;
 
     protected $configurations;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations)
+    protected $filesystem;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem)
     {
         parent::__construct('test', 'Generate test classes');
 
         $this->class_generator = $class_generator;
         $this->configurations = $configurations;
+        $this->filesystem = $filesystem;
 
         $this
             ->argument('<method>', 'The method to test')
@@ -36,9 +37,31 @@ class GenerateTestsCommand extends Command
     // with correct $ball and $apple values
     public function execute($method, $type)
     {
+        if(! $type) {
+            $type = '';
+        }
 
-        list($class_name, $method_name) = explode("::", $method);
+        $class_name = $method;
+        $method_name = false;
 
+        if (strpos($method, "::") !== false) {
+            list($class_name, $method_name) = explode("::", $method);
+        }
+
+        $methods = [];
+
+        if($method_name) {
+            $methods []= $method_name;
+        } else {
+          $methods = $this->get_public_functions($class_name);
+        }
+
+        foreach ($methods as $method) {
+            $this->generate_tests($class_name, $method, $type);
+        }
+    }
+
+    protected function generate_tests(string $class_name, string $method_name, string $type) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
         $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
@@ -54,7 +77,7 @@ class GenerateTestsCommand extends Command
         $io = $this->app()->io();
 
         $files = [
-          'test/fixture.php.tpl' => $class_name_fixture_path . '/' . $method_name_path,
+            'test/fixture.php.tpl' => $class_name_fixture_path . '/' . $method_name_path,
         ];
 
         if($type === 'unit' || $type === 'u') {
@@ -83,5 +106,25 @@ class GenerateTestsCommand extends Command
 
             $io->write("The class is created at this path: $path", true);
         }
+    }
+
+    protected function get_public_functions(string $class): array {
+        if(! $this->class_generator->exists($class)) {
+            return [];
+        }
+        $path = $this->class_generator->generate_path($class);
+
+        $content = $this->filesystem->read($path);
+
+        if(! preg_match_all('/public[ \n]+function[ \n]*(?<name>\w+)[ \n]*\(/', $content, $results) ) {
+            return [];
+        }
+
+        return array_values(array_filter($results['name'], function ($result) {
+            if(preg_match('/__\w+/', $result)) {
+                return false;
+            }
+            return $result;
+        }));
     }
 }
