@@ -1,0 +1,2 @@
+    {{ docblock }}
+    protected {{ name }};
