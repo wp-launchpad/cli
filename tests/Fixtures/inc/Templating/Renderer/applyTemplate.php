@@ -4,6 +4,9 @@ $content = <<<CONTENT
 class Test {
     {% if {{ test }} && {{ variable }} === 10: %}
     protected \$a = {{ variable }};
+    {% endif %}
+    {% if {{ test }} && {{ variable }} === 10: %}
+    protected \$a = {{ variable }};
     {% else %}
     protected \$b = {{ variable }};
     {% endif %}
@@ -12,7 +15,8 @@ CONTENT;
 
 $content_changed = <<<CONTENT
 class Test {
-    protected \$a = {{ variable }};
+    protected \$a = 10;
+    protected \$a = 10;
 }
 CONTENT;
 

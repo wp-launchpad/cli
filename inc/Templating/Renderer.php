@@ -36,13 +36,42 @@ class Renderer
     }
 
     protected function apply_ifs(string $content, array $variables = []): string {
-        if ( preg_match_all('/\{%[ \n]+if[ \n]+(?<condition>[^:]+):[ \n]+%\}(?<content_if>[\s\S]*?)(\{%[ \n]+else[ \n]+%\}(?<content_else>)[\s\S]*?)?\{%[ \n]+endif[ \n]+%\}/', $content, $results)) {
+        if ( ! preg_match_all('/ *\{%[ \n]+if[ \n]+(?<condition>[^:]+):[ \n]+%\}\n?(?<content_if>[\s\S]*?)( *\n?\{%[ \n]+else[ \n]+%\}\n?(?<content_else>[\s\S]*?))? *\n?\{%[ \n]+endif[ \n]+%\}\n?/m', $content, $results)) {
             return $content;
         }
+        $ifs_mapping = array_map(function ($match) {
+            $id = uniqid('rendering_if_');
+            return [$id => $match];
+        }, $results[0]);
+
+        $conditions = $results['condition'];
+        $contents_if = $results['content_if'];
+        $contents_else = $results['content_else'];
+
+        foreach ($ifs_mapping as $id => $value) {
+            $content = str_replace($value, $id, $content);
+        }
+        $index = -1;
+        foreach ($ifs_mapping as $id => $value) {
+            $index ++;
+            $condition = $conditions[0];
+
+            foreach ($variables as $variable_name => $variable_value) {
+                $condition = str_replace("{{ $variable_name }}", $variable_value, $condition);
+            }
+
+            $is_true = false;
+            eval('$is_true = (bool)' . $condition . ';');
+
+            if($is_true) {
+                $content = str_replace($id, $contents_if[$index], $content);
+                continue;
+            }
+
+            $content = str_replace($id, $contents_else[$index], $content);
+        }
+
         return $content;
-        $results['condition'];
-        $results['content_if'];
-        $results['content_else'];
     }
 
     /**
