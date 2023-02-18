@@ -24,28 +24,60 @@ class SetUpGenerator
 
         $content = $this->filesystem->read($path);
 
-        if(! $this->detect_class($content)) {
+        $name = str_replace('.php', '', basename($path) );
+
+        $main_class = $this->detect_class($name, $content);
+        $key_main_class = $this->create_id($main_class);
+
+        if(! $this->detect_class($main_class, $content)) {
             return '';
         }
 
         $parameters = $this->fetch_parameters($content);
 
         $properties = '';
-
-
+        $properties_initialisation = '';
+        $init_params = '';
 
         foreach ($parameters as $key => $type) {
-            $docblock = '';
             if($type) {
-                $docblock = $this->renderer->apply_template('', [
-                    'type' => $type
-                ]);
-                $properties .= $this->renderer->apply_template('', [
-                   'docblock' => $docblock,
+                $properties .= $this->renderer->apply_template('/test/_partials/parameter.php.tpl', [
+                   'type' => $type,
+                   'has_type' => true,
                    'name' => $key
                 ]);
+                $properties_initialisation .= $this->renderer->apply_template('/test/_partials/parameter_init.php.tpl', [
+                    'type' => $type,
+                    'has_type' => true,
+                    'name' => $key
+                ]);
+                continue;
             }
+            $properties .= $this->renderer->apply_template('/test/_partials/parameter.php.tpl', [
+                'has_type' => false,
+                'name' => $key
+            ]);
+            $properties_initialisation .= $this->renderer->apply_template('/test/_partials/parameter_init.php.tpl', [
+                'has_type' => false,
+                'name' => $key
+            ]);
+
+            $init_params .= "\$this->$key, ";
         }
+
+        return $this->renderer->apply_template('/test/_partials/setup.php.tpl', [
+            'main_class_name' => $key_main_class,
+            'main_class_type' => $main_class,
+            'properties' => $properties,
+            'properties_initialisation' => $properties_initialisation,
+            'init_params' => $init_params,
+        ]);
+    }
+
+    public function create_id(string $class ) {
+        $class = trim( $class, '\\' );
+        $class = str_replace( '\\', '.', $class );
+        return strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
     }
 
     protected function detect_class(string $name, string $content) {
@@ -59,7 +91,8 @@ class SetUpGenerator
             return [];
         }
         $parameters = $results['parameters'];
-        if(! preg_match('/(?<type>\w+)?[ \n]+(?<name>\$\w+)/', $content, $results, $parameters) || !key_exists('name', $results)) {
+        if(! preg_match_all('/(?<type>\w+)?[ \n]+(?<name>\$\w+)/m', $content, $results, $parameters) ||
+            !key_exists('name', $results)) {
             return [];
         }
         $types = $results['type'];
