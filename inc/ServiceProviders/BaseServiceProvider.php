@@ -51,7 +51,15 @@ class BaseServiceProvider implements ServiceProviderInterface
         // The FilesystemOperator
         $this->filesystem = new Filesystem($adapter);
 
-        $this->renderer = new Renderer($app_dir . '/templates/');
+        $adapter = new Local(
+        // Determine root directory
+            $app_dir
+        );
+
+        // The FilesystemOperator
+        $template_filesystem = new Filesystem($adapter);
+
+        $this->renderer = new Renderer($template_filesystem, '/templates/');
     }
 
     public function attach_commands(App $app): App
@@ -62,7 +70,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager));
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
         $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
-        $app->add(new GenerateTestsCommand($class_generator, $this->configs));
+        $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
         return $app;
     }
