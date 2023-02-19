@@ -51,7 +51,15 @@ class BaseServiceProvider implements ServiceProviderInterface
         // The FilesystemOperator
         $this->filesystem = new Filesystem($adapter);
 
-        $this->renderer = new Renderer($app_dir . '/templates/');
+        $adapter = new Local(
+        // Determine root directory
+            $app_dir
+        );
+
+        // The FilesystemOperator
+        $template_filesystem = new Filesystem($adapter);
+
+        $this->renderer = new Renderer($template_filesystem, '/templates/');
     }
 
     public function attach_commands(App $app): App
