@@ -1,1 +1,1 @@
-# psr2-plugin-builder
+# rocket-launcher-builder
