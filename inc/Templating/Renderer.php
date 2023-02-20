@@ -54,7 +54,7 @@ class Renderer
         $index = -1;
         foreach ($ifs_mapping as $id => $value) {
             $index ++;
-            $condition = $conditions[0];
+            $condition = $conditions[$index];
 
             foreach ($variables as $variable_name => $variable_value) {
                 $condition = str_replace("{{ $variable_name }}", $variable_value, $condition);

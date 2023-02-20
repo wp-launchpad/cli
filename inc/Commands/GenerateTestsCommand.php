@@ -5,6 +5,7 @@ namespace PSR2PluginBuilder\Commands;
 use League\Flysystem\Filesystem;
 use PSR2PluginBuilder\Entities\Configurations;
 use PSR2PluginBuilder\Services\ClassGenerator;
+use PSR2PluginBuilder\Services\SetUpGenerator;
 
 class GenerateTestsCommand extends Command
 {
@@ -14,13 +15,16 @@ class GenerateTestsCommand extends Command
 
     protected $filesystem;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem)
+    protected $setup_generator;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator)
     {
         parent::__construct('test', 'Generate test classes');
 
         $this->class_generator = $class_generator;
         $this->configurations = $configurations;
         $this->filesystem = $filesystem;
+        $this->setup_generator = $generator;
 
         $this
             ->argument('<method>', 'The method to test')
@@ -57,11 +61,11 @@ class GenerateTestsCommand extends Command
         }
 
         foreach ($methods as $method) {
-            $this->generate_tests($class_name, $method, $type);
+            $this->generate_tests($class_name, $method, $type, $class_name);
         }
     }
 
-    protected function generate_tests(string $class_name, string $method_name, string $type) {
+    protected function generate_tests(string $class_name, string $method_name, string $type, string $original_class) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
         $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
@@ -98,6 +102,14 @@ class GenerateTestsCommand extends Command
                 'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
             ], true);
+
+            if( $template === 'test/unit.php.tpl') {
+                $original_class_path = $this->class_generator->generate_path($original_class);
+                $setup = $this->setup_generator->generate_set_up($original_class_path, $original_class);
+                $content = $this->filesystem->read($path);
+                $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);
+                $this->filesystem->update($path, $this->setup_generator->add_setup_to_class($setup['setup'], $content));
+            }
 
             if( ! $path ) {
                 $io->write("The class already exists", true);

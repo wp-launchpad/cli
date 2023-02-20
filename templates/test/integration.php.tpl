@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use {{ base_namespace }}Test\Integration\TestCase;
+use {{ base_namespace }}Tests\Integration\TestCase;
 
 /**
  * @covers {{ base_class }}::{{ base_method }}
