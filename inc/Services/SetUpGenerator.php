@@ -1,9 +1,9 @@
 <?php
 
-namespace PSR2PluginBuilder\Services;
+namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\Templating\Renderer;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class SetUpGenerator
 {

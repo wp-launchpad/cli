@@ -1,10 +1,10 @@
 <?php
 
-namespace PSR2PluginBuilder\Services;
+namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\Entities\Configurations;
-use PSR2PluginBuilder\Templating\Renderer;
+use RocketLauncherBuilder\Entities\Configurations;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class ClassGenerator
 {

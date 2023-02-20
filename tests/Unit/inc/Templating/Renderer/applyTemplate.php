@@ -1,15 +1,15 @@
 <?php
 
-namespace PSR2PluginBuilder\Tests\Unit\inc\Templating\Renderer;
+namespace RocketLauncherBuilder\Tests\Unit\inc\Templating\Renderer;
 
 use League\Flysystem\Filesystem;
 use Mockery;
-use PSR2PluginBuilder\Templating\FileNotFoundException;
-use PSR2PluginBuilder\Templating\Renderer;
-use PSR2PluginBuilder\Tests\Unit\TestCase;
+use RocketLauncherBuilder\Templating\FileNotFoundException;
+use RocketLauncherBuilder\Templating\Renderer;
+use RocketLauncherBuilder\Tests\Unit\TestCase;
 
 /**
- * @covers \PSR2PluginBuilder\Templating\Renderer::apply_template
+ * @covers \RocketLauncherBuilder\Templating\Renderer::apply_template
  *
  */
 class Test_applyTemplate extends TestCase {

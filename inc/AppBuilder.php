@@ -1,13 +1,13 @@
 <?php
 
-namespace PSR2PluginBuilder;
+namespace RocketLauncherBuilder;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use PSR2PluginBuilder\ServiceProviders\BaseServiceProvider;
-use PSR2PluginBuilder\ServiceProviders\ServiceProviderInterface;
-use PSR2PluginBuilder\Services\ConfigurationResolver;
+use RocketLauncherBuilder\ServiceProviders\BaseServiceProvider;
+use RocketLauncherBuilder\ServiceProviders\ServiceProviderInterface;
+use RocketLauncherBuilder\Services\ConfigurationResolver;
 
 class AppBuilder
 {

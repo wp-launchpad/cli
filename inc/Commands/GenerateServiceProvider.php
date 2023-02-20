@@ -1,10 +1,10 @@
 <?php
 
-namespace PSR2PluginBuilder\Commands;
+namespace RocketLauncherBuilder\Commands;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\Entities\Configurations;
-use PSR2PluginBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Entities\Configurations;
+use RocketLauncherBuilder\Services\ClassGenerator;
 
 class GenerateServiceProvider extends Command
 {

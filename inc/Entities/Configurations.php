@@ -1,6 +1,6 @@
 <?php
 
-namespace PSR2PluginBuilder\Entities;
+namespace RocketLauncherBuilder\Entities;
 
 class Configurations
 {

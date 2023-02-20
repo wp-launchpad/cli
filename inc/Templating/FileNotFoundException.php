@@ -1,6 +1,6 @@
 <?php
 
-namespace PSR2PluginBuilder\Templating;
+namespace RocketLauncherBuilder\Templating;
 
 class FileNotFoundException extends \Exception
 {

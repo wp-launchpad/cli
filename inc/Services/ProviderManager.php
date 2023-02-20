@@ -1,12 +1,12 @@
 <?php
 
-namespace PSR2PluginBuilder\Services;
+namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\App;
-use PSR2PluginBuilder\Commands\GenerateServiceProvider;
-use PSR2PluginBuilder\ObjectValues\SubscriberType;
-use PSR2PluginBuilder\Templating\Renderer;
+use RocketLauncherBuilder\App;
+use RocketLauncherBuilder\Commands\GenerateServiceProvider;
+use RocketLauncherBuilder\ObjectValues\SubscriberType;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class ProviderManager
 {

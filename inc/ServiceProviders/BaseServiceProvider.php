@@ -1,20 +1,20 @@
 <?php
 
-namespace PSR2PluginBuilder\ServiceProviders;
+namespace RocketLauncherBuilder\ServiceProviders;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\App;
-use PSR2PluginBuilder\Commands\GenerateFixtureCommand;
-use PSR2PluginBuilder\Commands\GenerateServiceProvider;
-use PSR2PluginBuilder\Commands\GenerateSubscriberCommand;
-use PSR2PluginBuilder\Commands\GenerateTableCommand;
-use PSR2PluginBuilder\Commands\GenerateTestsCommand;
-use PSR2PluginBuilder\Entities\Configurations;
-use PSR2PluginBuilder\Services\ClassGenerator;
-use PSR2PluginBuilder\Services\ProviderManager;
-use PSR2PluginBuilder\Services\SetUpGenerator;
-use PSR2PluginBuilder\Templating\Renderer;
+use RocketLauncherBuilder\App;
+use RocketLauncherBuilder\Commands\GenerateFixtureCommand;
+use RocketLauncherBuilder\Commands\GenerateServiceProvider;
+use RocketLauncherBuilder\Commands\GenerateSubscriberCommand;
+use RocketLauncherBuilder\Commands\GenerateTableCommand;
+use RocketLauncherBuilder\Commands\GenerateTestsCommand;
+use RocketLauncherBuilder\Entities\Configurations;
+use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\ProviderManager;
+use RocketLauncherBuilder\Services\SetUpGenerator;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class BaseServiceProvider implements ServiceProviderInterface
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace PSR2PluginBuilder\Tests\Unit\inc\Services\SetUpGenerator;
+namespace RocketLauncherBuilder\Tests\Unit\inc\Services\SetUpGenerator;
 
 use League\Flysystem\Filesystem;
 use Mockery;
-use PSR2PluginBuilder\Services\SetUpGenerator;
-use PSR2PluginBuilder\Templating\Renderer;
-use PSR2PluginBuilder\Tests\Unit\TestCase;
+use RocketLauncherBuilder\Services\SetUpGenerator;
+use RocketLauncherBuilder\Templating\Renderer;
+use RocketLauncherBuilder\Tests\Unit\TestCase;
 
 /**
- * @covers \PSR2PluginBuilder\Services\SetUpGenerator::create_id
+ * @covers \RocketLauncherBuilder\Services\SetUpGenerator::create_id
  *
  */
 class Test_createId extends TestCase {

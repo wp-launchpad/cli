@@ -1,5 +1,5 @@
 <?php
-namespace PSR2PluginBuilder\Tests\Unit;
+namespace RocketLauncherBuilder\Tests\Unit;
 
 use ReflectionObject;
 use WPMedia\PHPUnit\Unit\TestCase as UnitTestCase;

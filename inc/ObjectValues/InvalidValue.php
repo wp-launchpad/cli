@@ -1,6 +1,6 @@
 <?php
 
-namespace PSR2PluginBuilder\ObjectValues;
+namespace RocketLauncherBuilder\ObjectValues;
 
 class InvalidValue extends \Exception
 {

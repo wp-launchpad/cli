@@ -1,8 +1,8 @@
 <?php
 
-namespace PSR2PluginBuilder\ServiceProviders;
+namespace RocketLauncherBuilder\ServiceProviders;
 
-use PSR2PluginBuilder\App;
+use RocketLauncherBuilder\App;
 
 interface ServiceProviderInterface
 {

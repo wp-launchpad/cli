@@ -1,6 +1,6 @@
 <?php
 
-namespace PSR2PluginBuilder;
+namespace RocketLauncherBuilder;
 
 use Ahc\Cli\Application;
 

@@ -3,11 +3,11 @@
 $content = <<<CONTENT
 <?php
 
-namespace PSR2PluginBuilder\Services;
+namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\Entities\Configurations;
-use PSR2PluginBuilder\Templating\Renderer;
+use RocketLauncherBuilder\Entities\Configurations;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class ClassGenerator
 {
@@ -53,7 +53,7 @@ return [
             'parameter' => 'protected $value;',
             'parameter_init' => '$this->value = Mockery::mock($this->value);',
             'setup' => '',
-            'fullclassname' => '/PSR2PluginBuilder/Services/ClassGenerator'
+            'fullclassname' => '/RocketLauncherBuilder/Services/ClassGenerator'
         ],
         'expected' => [
             'path' => '/inc/ClassGenerator.php',
@@ -74,14 +74,14 @@ return [
             'parameter' => 'protected $value;',
             'parameter_init' => '$this->value = Mockery::mock(Filesystem::class);',
             'setup' => $setup,
-            'fullclassname' => '/PSR2PluginBuilder/Services/ClassGenerator'
+            'fullclassname' => '/RocketLauncherBuilder/Services/ClassGenerator'
         ],
         'expected' => [
             'path' => '/inc/ClassGenerator.php',
             'set_up' => [
                 'setup' => $setup,
                 'usages' => [
-                    'PSR2PluginBuilder\Services\ClassGenerator',
+                    'RocketLauncherBuilder\Services\ClassGenerator',
                     'Mockery',
                     'League\Flysystem\Filesystem',
                 ],

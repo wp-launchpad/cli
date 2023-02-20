@@ -1,12 +1,12 @@
 <?php
 
-namespace PSR2PluginBuilder\Commands;
+namespace RocketLauncherBuilder\Commands;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\ObjectValues\SubscriberType;
-use PSR2PluginBuilder\Services\ClassGenerator;
-use PSR2PluginBuilder\Services\ProviderManager;
-use PSR2PluginBuilder\Templating\Renderer;
+use RocketLauncherBuilder\ObjectValues\SubscriberType;
+use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\ProviderManager;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class GenerateSubscriberCommand extends Command
 {

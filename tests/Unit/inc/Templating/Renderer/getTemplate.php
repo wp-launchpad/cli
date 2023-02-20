@@ -1,11 +1,11 @@
 <?php
 
-namespace PSR2PluginBuilder\Tests\Unit\inc\Templating\Renderer;
+namespace RocketLauncherBuilder\Tests\Unit\inc\Templating\Renderer;
 
-use PSR2PluginBuilder\Tests\Unit\TestCase;
+use RocketLauncherBuilder\Tests\Unit\TestCase;
 
 /**
- * @covers \PSR2PluginBuilder\Templating\Renderer::get_template
+ * @covers \RocketLauncherBuilder\Templating\Renderer::get_template
  *
  */
 class Test_getTemplate extends TestCase {

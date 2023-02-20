@@ -1,6 +1,6 @@
 {
-  "name": "crochetfeve0251/psr2-plugin-builder",
-  "description": "Builder library for psr2 plugin",
+  "name": "crochetfeve0251/rocket-launcher-builder",
+  "description": "Builder library for psr4 plugin",
   "minimum-stability": "stable",
   "license": "proprietary",
   "type": "library",
@@ -22,12 +22,12 @@
   },
   "autoload": {
     "psr-4": {
-      "PSR2PluginBuilder\\": "inc/"
+      "RocketLauncherBuilder\\": "inc/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "PSR2PluginBuilder\\Tests\\": "tests/"
+      "RocketLauncherBuilder\\Tests\\": "tests/"
     }
   }
 }

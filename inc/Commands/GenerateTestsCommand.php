@@ -1,11 +1,11 @@
 <?php
 
-namespace PSR2PluginBuilder\Commands;
+namespace RocketLauncherBuilder\Commands;
 
 use League\Flysystem\Filesystem;
-use PSR2PluginBuilder\Entities\Configurations;
-use PSR2PluginBuilder\Services\ClassGenerator;
-use PSR2PluginBuilder\Services\SetUpGenerator;
+use RocketLauncherBuilder\Entities\Configurations;
+use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\SetUpGenerator;
 
 class GenerateTestsCommand extends Command
 {
