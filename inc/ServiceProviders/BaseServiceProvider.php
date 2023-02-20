@@ -13,6 +13,7 @@ use PSR2PluginBuilder\Commands\GenerateTestsCommand;
 use PSR2PluginBuilder\Entities\Configurations;
 use PSR2PluginBuilder\Services\ClassGenerator;
 use PSR2PluginBuilder\Services\ProviderManager;
+use PSR2PluginBuilder\Services\SetUpGenerator;
 use PSR2PluginBuilder\Templating\Renderer;
 
 class BaseServiceProvider implements ServiceProviderInterface
@@ -67,10 +68,12 @@ class BaseServiceProvider implements ServiceProviderInterface
         $class_generator = new ClassGenerator($this->filesystem, $this->renderer, $this->configs);
         $provider_manager = new ProviderManager($app, $this->filesystem, $class_generator, $this->renderer);
 
+        $setup_generator = new SetUpGenerator($this->filesystem, $this->renderer);
+
         $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager));
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
         $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
-        $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem));
+        $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
         return $app;
     }
