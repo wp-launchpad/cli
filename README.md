@@ -21,7 +21,8 @@ AppBuilder::init(__DIR__ . '/../');
 
 With this commandline the following command are available:
 
-    `subscriber`: Generate a subscriber file and attach it to the project.
-    `provider`: Generate a service provider file and attach it to the project.
-    `test`: Generate a test file.
-    `table`: Generate files for adding a new table to the project.
+- `subscriber`: Generate a subscriber file and attach it to the project.
+- `provider`: Generate a service provider file and attach it to the project.
+- `test`: Generate a test file.
+- `table`: Generate files for adding a new table to the project.
+
