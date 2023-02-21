@@ -29,6 +29,7 @@ class GenerateTestsCommand extends Command
         $this
             ->argument('<method>', 'The method to test')
             ->option('-t --type', 'Type from the test')
+            ->option('-g --group', 'Group from the test')
             // Usage examples:
             ->usage(
                 '<bold>  test</end> <comment>MyNamespace/ClassName::method --type both</end> ## creates both tests<eol/>' .
@@ -39,9 +40,13 @@ class GenerateTestsCommand extends Command
 
     // When app->handle() locates `init` command it automatically calls `execute()`
     // with correct $ball and $apple values
-    public function execute($method, $type)
+    public function execute($method, $type, $group)
     {
         if(! $type) {
+            $type = '';
+        }
+
+        if(! $group) {
             $type = '';
         }
 
@@ -61,11 +66,11 @@ class GenerateTestsCommand extends Command
         }
 
         foreach ($methods as $method) {
-            $this->generate_tests($class_name, $method, $type, $class_name);
+            $this->generate_tests($class_name, $method, $type, $group, $class_name);
         }
     }
 
-    protected function generate_tests(string $class_name, string $method_name, string $type, string $original_class) {
+    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $original_class) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
         $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
@@ -101,6 +106,8 @@ class GenerateTestsCommand extends Command
             $path = $this->class_generator->generate($template, $file, [
                 'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
+                'has_group' => $group === '',
+                'group' => $group,
             ], true);
 
             if( $template === 'test/unit.php.tpl') {
