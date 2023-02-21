@@ -12,6 +12,9 @@ class Test_{{ class_name }} extends TestCase {
 
     /**
      * @dataProvider configTestData
+     {% if has_group : %}
+     * @group {{ group }}
+     {% endif %}
      */
     public function testShouldReturnExpected( $config, $expected )
     {
