@@ -27,3 +27,12 @@ With this commandline the following command are available:
 - `table`: Generate files for adding a new table to the project.
 - `fixture`: Generate a fixture file and attach it to the project.
 
+## Subscriber
+To create a subscriber run the following command: `subscriber Namespace/MyClass`.
+
+On the subscriber command the following options are available:
+| Option | Short option | Value | Short value | Default | Description |
+-----------------------------------------------
+| type   |     t       | common | c           | true    | Common subscriber that load on both administration view and front |
+| type   |     t       | admin | a           | false    | Common subscriber that load only on administration view |
+| type   |     t       | front | f           | false    | Common subscriber that load only on front |
