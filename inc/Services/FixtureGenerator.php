@@ -32,11 +32,23 @@ class FixtureGenerator
 
         $parameters = $this->get_parameters($method, $content);
 
+        $parameter_template = '';
+
+        foreach ($parameters as $key => $type) {
+            $key_without_dollar = str_replace('$', '', $key);
+            $parameter_template .= $this->renderer->apply_template('/test/_partials/parameterscenario.php.tpl', [
+                'type' => $type,
+                'has_type' => is_null($type),
+                'name' => $key_without_dollar
+            ]);
+        }
+
         $has_return_value = $this->has_return($method, $content);
 
-        $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
+        return $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
             'scenario' => '',
-            'parameters' => ,
+            'parameters' => $parameter_template,
+            'has_expected' => $has_return_value,
         ]);
 
     }
