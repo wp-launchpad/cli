@@ -3,6 +3,7 @@
 namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
+use RocketLauncherBuilder\Templating\Renderer;
 
 class FixtureGenerator
 {
@@ -10,6 +11,11 @@ class FixtureGenerator
      * @var Filesystem
      */
     protected $filesystem;
+
+    /**
+     * @var Renderer
+     */
+    protected $renderer;
 
     public function generate_scenarios(string $path, string $method) {
         if(! $this->filesystem->has($path)) {
@@ -26,6 +32,12 @@ class FixtureGenerator
 
         $parameters = $this->get_parameters($method, $content);
 
+        $has_return_value = $this->has_return($method, $content);
+
+        $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
+            'scenario' => '',
+            'parameters' => ,
+        ]);
 
     }
 
