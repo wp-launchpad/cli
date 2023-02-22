@@ -40,7 +40,7 @@ On the subscriber command the following options are available:
 ## Provider
 To create a service provider run the following command: `provider Namespace/MyClass`.
 
-## test
+## Test
 To create tests matching all public functions from a class run the following command: `test Namespace/MyClass`.
 
 To create tests matching a single function from a class run the following commad: `test Namespace/MyClass::my_method`.
@@ -52,3 +52,9 @@ On the test command the following options are available:
 | type   |     t        | unit          | u           | false   | Create unit tests                                                 |
 | type   |     t        | integration   | i           | false   | Create integration tests                                          |
 | group  |     g        | your value    | your value  | false   | Add a group to tests                                              |
+
+## Table
+To create a service provider run the following command: `table my_table Mynamespace`.
+
+## Fixture
+To create a service provider run the following command: `fixture MyClass`.
