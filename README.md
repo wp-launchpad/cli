@@ -54,7 +54,7 @@ On the test command the following options are available:
 | group      |     g        | your value    | your value     | false   | Add a group to tests                                              |
 | expected   |     e        | present       | present        | false   | Force the expected parameter on tests                             |
 | expected   |     e        | absent        | absent         | false   | Force the expected parameter to be absent on tests                |
-| scenarios  |     s        | your value    | value1,value2  | false   | Add scenarios to the fixtures from the tests tests                |
+| scenarios  |     s        | value1,value2 | value1,value2  | false   | Add scenarios to the fixtures from the tests tests                |
 
 ## Table
 To create a service provider run the following command: `table my_table Mynamespace`.
