@@ -28,7 +28,7 @@ class FixtureGenerator
     }
 
 
-    public function generate_scenarios(string $path, string $method, bool $has_return_value) {
+    public function generate_scenarios(string $path, string $method, bool $has_return_value, array $scenarios) {
         if(! $this->filesystem->has($path)) {
             return '';
         }
@@ -54,11 +54,17 @@ class FixtureGenerator
             ]);
         }
 
-        return $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
-            'scenario' => '',
-            'values' => $parameter_template,
-            'has_expected' => $has_return_value,
-        ]);
+        $output = '';
+
+        foreach ($scenarios as $scenario) {
+            $output .= $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
+                'scenario' => $scenario,
+                'values' => $parameter_template,
+                'has_expected' => $has_return_value,
+            ]);
+        }
+
+        return $output;
 
     }
 
