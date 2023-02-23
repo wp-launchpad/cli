@@ -46,14 +46,15 @@ To create tests matching all public functions from a class run the following com
 To create tests matching a single function from a class run the following commad: `test Namespace/MyClass::my_method`.
 
 On the test command the following options are available:
-| Option    | Short option | Value         | Short value | Default | Description                                                       |
-|:---------:|:------------:|:-------------:|:-----------:|:--------|:-----------------------------------------------------------------:|
-| type      |     t        | both          | b           | true    | Create both unit and integration tests                            |
-| type      |     t        | unit          | u           | false   | Create unit tests                                                 |
-| type      |     t        | integration   | i           | false   | Create integration tests                                          |
-| group     |     g        | your value    | your value  | false   | Add a group to tests                                              |
-| expected  |     e        | present       | present     | false   | Force the expected parameter on tests                             |
-| expected  |     e        | absent        | absent      | false   | Force the expected parameter to be absent on tests                |
+| Option     | Short option | Value         | Short value    | Default | Description                                                       |
+|:----------:|:------------:|:-------------:|:--------------:|:--------|:-----------------------------------------------------------------:|
+| type       |     t        | both          | b              | true    | Create both unit and integration tests                            |
+| type       |     t        | unit          | u              | false   | Create unit tests                                                 |
+| type       |     t        | integration   | i              | false   | Create integration tests                                          |
+| group      |     g        | your value    | your value     | false   | Add a group to tests                                              |
+| expected   |     e        | present       | present        | false   | Force the expected parameter on tests                             |
+| expected   |     e        | absent        | absent         | false   | Force the expected parameter to be absent on tests                |
+| scenarios  |     s        | your value    | value1,value2  | false   | Add scenarios to the fixtures from the tests tests                |
 
 ## Table
 To create a service provider run the following command: `table my_table Mynamespace`.
