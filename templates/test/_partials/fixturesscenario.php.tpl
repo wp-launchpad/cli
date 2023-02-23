@@ -1,8 +1,8 @@
     '{{ scenario }}' => [
         'config' => [
-        {{ values }}
+{{ values }}
         ],
-        {% if has_expected : %}
+        {% if {{ has_expected }} : %}
         'expected' => [
 
         ]

@@ -49,8 +49,8 @@ class FixtureGenerator
             $key_without_dollar = str_replace('$', '', $key);
             $parameter_template .= $this->renderer->apply_template('/test/_partials/parameterscenario.php.tpl', [
                 'type' => $type,
-                'has_type' => is_null($type),
-                'name' => $key_without_dollar
+                'has_type' => ! is_null($type),
+                'key' => $key_without_dollar
             ]);
         }
 
@@ -58,18 +58,19 @@ class FixtureGenerator
 
         return $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
             'scenario' => '',
-            'parameters' => $parameter_template,
+            'values' => $parameter_template,
             'has_expected' => $has_return_value,
         ]);
 
     }
 
     protected function has_method(string $method, string $content) {
-        return ( ! preg_match("/public[ \n]+function[ \n]+$method/", $content ) );
+        return preg_match("/public[ \n]+function[ \n]+$method/", $content );
     }
 
     protected function get_parameters(string $method, string $content) {
-        if ( ! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\((?<parameters>[^\)])*\)/", $content, $results ) ) {
+        if ( ! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\((?<parameters>[^\)]*)\)/", $content,
+            $results ) ) {
             return [];
         }
         $parameters = $results['parameters'];
@@ -91,12 +92,11 @@ class FixtureGenerator
     }
 
     protected function has_return(string $method, string $content) {
-
         if(preg_match("/\/\*\*(?<docblock>[^\/]+)\/[ \n]+public[ \n]+function[ \n]+{$method}/", $content, $results) && preg_match('/@return (void|null)/', $results['docblock'])) {
                 return false;
         }
 
-        if(! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\(([^\)])*\)(?<return>[ \n]*:[ \n]*\w+)?[ \n]*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/", $content, $results ) ) {
+        if(! preg_match("/function\s+{$method}\([^\)]*\)(?<return>[ \n]*:[ \n]*\w+)?\s*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/", $content, $results ) ) {
             return false;
         }
 
