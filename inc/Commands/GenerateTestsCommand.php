@@ -47,7 +47,7 @@ class GenerateTestsCommand extends Command
         }
 
         if(! $group) {
-            $type = '';
+            $group = '';
         }
 
         $class_name = $method;
@@ -106,7 +106,7 @@ class GenerateTestsCommand extends Command
             $path = $this->class_generator->generate($template, $file, [
                 'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
-                'has_group' => $group === '',
+                'has_group' => $group !== '',
                 'group' => $group,
             ], true);
 
@@ -120,7 +120,7 @@ class GenerateTestsCommand extends Command
 
             if( ! $path ) {
                 $io->write("The class already exists", true);
-                return;
+                continue;
             }
 
             $io->write("The class is created at this path: $path", true);
