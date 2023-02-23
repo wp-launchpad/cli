@@ -28,7 +28,7 @@ class FixtureGenerator
     }
 
 
-    public function generate_scenarios(string $path, string $method) {
+    public function generate_scenarios(string $path, string $method, bool $has_return_value) {
         if(! $this->filesystem->has($path)) {
             return '';
         }
@@ -53,8 +53,6 @@ class FixtureGenerator
                 'key' => $key_without_dollar
             ]);
         }
-
-        $has_return_value = $this->has_return($method, $content);
 
         return $this->renderer->apply_template('/test/_partials/fixturesscenario.php.tpl', [
             'scenario' => '',
