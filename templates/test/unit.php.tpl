@@ -6,7 +6,7 @@ use {{ base_namespace }}Tests\Unit\TestCase;
 
 /**
  * @covers {{ base_class }}::{{ base_method }}
- {% if has_group : %}
+ {% if {{ has_group }} : %}
  * @group {{ group }}
  {% endif %}
  */

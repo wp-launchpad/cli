@@ -57,6 +57,9 @@ class Renderer
             $condition = $conditions[$index];
 
             foreach ($variables as $variable_name => $variable_value) {
+                if($variable_value === false) {
+                    $variable_value = 'false';
+                }
                 $condition = str_replace("{{ $variable_name }}", $variable_value, $condition);
             }
 

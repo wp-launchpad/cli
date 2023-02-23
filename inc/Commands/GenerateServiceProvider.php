@@ -62,6 +62,6 @@ class GenerateServiceProvider extends Command
             return;
         }
 
-        $this->filesystem->write($plugin_path, $plugin_content);
+        $this->filesystem->update($plugin_path, $plugin_content);
     }
 }
