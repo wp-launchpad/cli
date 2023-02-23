@@ -17,6 +17,13 @@ class FixtureGenerator
      */
     protected $renderer;
 
+    /**
+     * @param string $path
+     * @param string $method
+     * @return string
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     public function generate_scenarios(string $path, string $method) {
         if(! $this->filesystem->has($path)) {
             return '';
@@ -80,11 +87,21 @@ class FixtureGenerator
     }
 
     protected function has_return(string $method, string $content) {
-        if(! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\(([^\)])*\)[ \n]*(?<content>?:[^{}]+|\{(?1)\})*/", $content, $results ) ) {
+
+        if(preg_match("/\/\*\*(?<docblock>[^\/]+)\/[ \n]+public[ \n]+function[ \n]+{$method}/", $content, $results) && preg_match('/@return (void|null)/', $results['docblock'])) {
+                return false;
+        }
+
+        if(! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\(([^\)])*\)(?<return>[ \n]*:[ \n]*\w+)?[ \n]*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/", $content, $results ) ) {
             return false;
         }
+
         $content = $results['content'];
 
-        return preg_match('/return\s+([^;]+);$/', $content);
+        if(key_exists('return', $results) && strpos($results['return'], 'void') === false) {
+            return true;
+        }
+
+        return preg_match('/return\s+([^;]+);/', $content);
     }
 }
