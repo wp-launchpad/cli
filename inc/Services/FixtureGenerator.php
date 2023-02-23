@@ -18,12 +18,16 @@ class FixtureGenerator
     protected $renderer;
 
     /**
-     * @param string $path
-     * @param string $method
-     * @return string
-     * @throws \League\Flysystem\FileNotFoundException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @param Filesystem $filesystem
+     * @param Renderer $renderer
      */
+    public function __construct(Filesystem $filesystem, Renderer $renderer)
+    {
+        $this->filesystem = $filesystem;
+        $this->renderer = $renderer;
+    }
+
+
     public function generate_scenarios(string $path, string $method) {
         if(! $this->filesystem->has($path)) {
             return '';
@@ -103,5 +107,21 @@ class FixtureGenerator
         }
 
         return preg_match('/return\s+([^;]+);/', $content);
+    }
+
+    public function method_has_return(string $path, string $method) {
+        if(! $this->filesystem->has($path)) {
+            return false;
+        }
+
+        $content = $this->filesystem->read($path);
+
+        $has_method = $this->has_method($method, $content);
+
+        if( ! $has_method ) {
+            return false;
+        }
+
+        return $this->has_return($method, $content);
     }
 }

@@ -5,6 +5,7 @@ namespace RocketLauncherBuilder\Commands;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\FixtureGenerator;
 use RocketLauncherBuilder\Services\SetUpGenerator;
 
 class GenerateTestsCommand extends Command
@@ -17,7 +18,9 @@ class GenerateTestsCommand extends Command
 
     protected $setup_generator;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator)
+    protected $fixture_generator;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator)
     {
         parent::__construct('test', 'Generate test classes');
 
@@ -25,6 +28,7 @@ class GenerateTestsCommand extends Command
         $this->configurations = $configurations;
         $this->filesystem = $filesystem;
         $this->setup_generator = $generator;
+        $this->fixture_generator = $fixture_generator;
 
         $this
             ->argument('<method>', 'The method to test')
@@ -102,16 +106,22 @@ class GenerateTestsCommand extends Command
             $files['test/integration.php.tpl'] = $class_name_integration_path . '/' . $method_name_path;
         }
 
+        $original_class_path = $this->class_generator->generate_path($original_class);
+
+        $scenarios = $this->fixture_generator->generate_scenarios($original_class_path, $method_name);
+
         foreach ($files as $template => $file) {
+            $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
             $path = $this->class_generator->generate($template, $file, [
                 'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
                 'has_group' => $group !== '',
+                'has_return' => $has_return,
                 'group' => $group,
+                'scenarios' => $scenarios
             ], true);
 
             if( $template === 'test/unit.php.tpl') {
-                $original_class_path = $this->class_generator->generate_path($original_class);
                 $setup = $this->setup_generator->generate_set_up($original_class_path, $original_class);
                 $content = $this->filesystem->read($path);
                 $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);

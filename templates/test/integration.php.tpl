@@ -15,7 +15,11 @@ class Test_{{ class_name }} extends TestCase {
     /**
      * @dataProvider configTestData
      */
-    public function testShouldReturnExpected( $config, $expected )
+    {% if {{ has_return }} : %}
+    public function testShouldReturnAsExpected( $config, $expected )
+    {% else %}
+    public function testShouldDoAsExpected( $config )
+    {% endif %}
     {
 
     }
