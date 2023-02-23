@@ -12,6 +12,7 @@ use RocketLauncherBuilder\Commands\GenerateTableCommand;
 use RocketLauncherBuilder\Commands\GenerateTestsCommand;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\FixtureGenerator;
 use RocketLauncherBuilder\Services\ProviderManager;
 use RocketLauncherBuilder\Services\SetUpGenerator;
 use RocketLauncherBuilder\Templating\Renderer;
@@ -70,10 +71,12 @@ class BaseServiceProvider implements ServiceProviderInterface
 
         $setup_generator = new SetUpGenerator($this->filesystem, $this->renderer);
 
+        $fixture_generator =  new FixtureGenerator($this->filesystem, $this->renderer);
+
         $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager));
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
         $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
-        $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator));
+        $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator, $fixture_generator));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
         return $app;
     }

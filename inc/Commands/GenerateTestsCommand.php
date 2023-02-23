@@ -5,6 +5,7 @@ namespace RocketLauncherBuilder\Commands;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\FixtureGenerator;
 use RocketLauncherBuilder\Services\SetUpGenerator;
 
 class GenerateTestsCommand extends Command
@@ -17,7 +18,9 @@ class GenerateTestsCommand extends Command
 
     protected $setup_generator;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator)
+    protected $fixture_generator;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator)
     {
         parent::__construct('test', 'Generate test classes');
 
@@ -25,11 +28,14 @@ class GenerateTestsCommand extends Command
         $this->configurations = $configurations;
         $this->filesystem = $filesystem;
         $this->setup_generator = $generator;
+        $this->fixture_generator = $fixture_generator;
 
         $this
             ->argument('<method>', 'The method to test')
             ->option('-t --type', 'Type from the test')
             ->option('-g --group', 'Group from the test')
+            ->option('-e --expected', 'Force the test to have an expected param from the test')
+           // ->option('-n --no-expected', 'Force the test to not have an expected param from the test')
             // Usage examples:
             ->usage(
                 '<bold>  test</end> <comment>MyNamespace/ClassName::method --type both</end> ## creates both tests<eol/>' .
@@ -40,7 +46,7 @@ class GenerateTestsCommand extends Command
 
     // When app->handle() locates `init` command it automatically calls `execute()`
     // with correct $ball and $apple values
-    public function execute($method, $type, $group)
+    public function execute($method, $type, $group, $expected)
     {
         if(! $type) {
             $type = '';
@@ -48,6 +54,10 @@ class GenerateTestsCommand extends Command
 
         if(! $group) {
             $group = '';
+        }
+
+        if(! $expected) {
+            $expected = '';
         }
 
         $class_name = $method;
@@ -66,11 +76,11 @@ class GenerateTestsCommand extends Command
         }
 
         foreach ($methods as $method) {
-            $this->generate_tests($class_name, $method, $type, $group, $class_name);
+            $this->generate_tests($class_name, $method, $type, $group, $expected, $class_name);
         }
     }
 
-    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $original_class) {
+    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $original_class) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
         $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
@@ -102,16 +112,30 @@ class GenerateTestsCommand extends Command
             $files['test/integration.php.tpl'] = $class_name_integration_path . '/' . $method_name_path;
         }
 
+        $original_class_path = $this->class_generator->generate_path($original_class);
+
+        $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
+
+        if($expected === 'present') {
+            $has_return = true;
+        }
+        if($expected === 'absent') {
+            $has_return = false;
+        }
+
+        $scenarios = $this->fixture_generator->generate_scenarios($original_class_path, $method_name, $has_return);
+
         foreach ($files as $template => $file) {
             $path = $this->class_generator->generate($template, $file, [
                 'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
                 'has_group' => $group !== '',
+                'has_return' => $has_return,
                 'group' => $group,
+                'scenarios' => $scenarios
             ], true);
 
             if( $template === 'test/unit.php.tpl') {
-                $original_class_path = $this->class_generator->generate_path($original_class);
                 $setup = $this->setup_generator->generate_set_up($original_class_path, $original_class);
                 $content = $this->filesystem->read($path);
                 $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);
