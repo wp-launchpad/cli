@@ -1,12 +1,12 @@
        {% if ! {{ has_type }} || ! in_array('{{ type }}', ['string', 'int', 'float', 'bool'] ) : %}
-       '{{ key }}' => null
+              '{{ key }}' => null,
        {%  endif %}
        {% if {{ has_type }} && in_array('{{ type }}', ['int', 'float',] ) : %}
-       '{{ key }}' => 0
+              '{{ key }}' => 0,
        {%  endif %}
        {% if {{ has_type }} && '{{ type }}' === 'string' : %}
-       '{{ key }}' => ''
+              '{{ key }}' => '',
        {%  endif %}
        {% if {{ has_type }} && '{{ type }}' === 'bool' : %}
-       '{{ key }}' => false
+              '{{ key }}' => false,
        {%  endif %}

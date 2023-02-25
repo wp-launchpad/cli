@@ -33,7 +33,7 @@ class ContentGenerator
         return $this->generate($path, $method, $has_return, '/test/_partials/contentintegration.php.tpl');
     }
 
-    protected function generate(string $path, string $method, bool $has_return, string $template, bool $has_event = false) {
+    protected function generate(string $path, string $method, bool $has_return, string $template, bool $has_event = true) {
         if(! $this->filesystem->has($path)) {
             return '';
         }
@@ -65,7 +65,7 @@ class ContentGenerator
             $template,
             [
                 'class' => $class_name,
-                'parameters' => $init,
+                'parameters' => trim($init, ', '),
                 'event'      => $event,
                 'method' => $method,
                 'has_return' => $has_return,

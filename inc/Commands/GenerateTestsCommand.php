@@ -34,10 +34,14 @@ class GenerateTestsCommand extends Command
         $this->fixture_generator = $fixture_generator;
         $this->content_generator = $content_generator;
 
+
         $this
             ->argument('<method>', 'The method to test')
             ->option('-t --type', 'Type from the test')
             ->option('-g --group', 'Group from the test')
+            ->option('-e --expected', 'Force the test to have an expected param from the test')
+            ->option('-s --scenarios', 'Add new scenarios for the test')
+           // ->option('-n --no-expected', 'Force the test to not have an expected param from the test')
             // Usage examples:
             ->usage(
                 '<bold>  test</end> <comment>MyNamespace/ClassName::method --type both</end> ## creates both tests<eol/>' .
@@ -48,7 +52,7 @@ class GenerateTestsCommand extends Command
 
     // When app->handle() locates `init` command it automatically calls `execute()`
     // with correct $ball and $apple values
-    public function execute($method, $type, $group)
+    public function execute($method, $type, $group, $expected, $scenarios)
     {
         if(! $type) {
             $type = '';
@@ -56,6 +60,16 @@ class GenerateTestsCommand extends Command
 
         if(! $group) {
             $group = '';
+        }
+
+        if(! $expected) {
+            $expected = '';
+        }
+
+        if(! $scenarios) {
+            $scenarios = [''];
+        } else {
+            $scenarios = explode(',', $scenarios);
         }
 
         $class_name = $method;
@@ -74,11 +88,11 @@ class GenerateTestsCommand extends Command
         }
 
         foreach ($methods as $method) {
-            $this->generate_tests($class_name, $method, $type, $group, $class_name);
+            $this->generate_tests($class_name, $method, $type, $group, $expected, $class_name, $scenarios);
         }
     }
 
-    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $original_class) {
+    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $original_class, array $scenarios) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
         $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
@@ -112,7 +126,17 @@ class GenerateTestsCommand extends Command
 
         $original_class_path = $this->class_generator->generate_path($original_class);
 
-        $scenarios = $this->fixture_generator->generate_scenarios($original_class_path, $method_name);
+
+        $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
+
+        if($expected === 'present') {
+            $has_return = true;
+        }
+        if($expected === 'absent') {
+            $has_return = false;
+        }
+
+        $scenarios = $this->fixture_generator->generate_scenarios($original_class_path, $method_name, $has_return, $scenarios);
 
         foreach ($files as $template => $file) {
             $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
