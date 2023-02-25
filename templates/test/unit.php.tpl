@@ -21,6 +21,6 @@ class Test_{{ class_name }} extends TestCase {
     public function testShouldDoAsExpected( $config )
     {% endif %}
     {
-
+{{ content }}
     }
 }
