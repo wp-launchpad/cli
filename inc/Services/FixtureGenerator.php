@@ -7,6 +7,8 @@ use RocketLauncherBuilder\Templating\Renderer;
 
 class FixtureGenerator
 {
+    use DetectReturnTrait;
+
     /**
      * @var Filesystem
      */
@@ -26,6 +28,7 @@ class FixtureGenerator
         $this->filesystem = $filesystem;
         $this->renderer = $renderer;
     }
+
 
 
     public function generate_scenarios(string $path, string $method, bool $has_return_value, array $scenarios) {
@@ -65,7 +68,6 @@ class FixtureGenerator
         }
 
         return $output;
-
     }
 
     protected function has_method(string $method, string $content) {
@@ -73,8 +75,7 @@ class FixtureGenerator
     }
 
     protected function get_parameters(string $method, string $content) {
-        if ( ! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\((?<parameters>[^\)]*)\)/", $content,
-            $results ) ) {
+        if ( ! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\((?<parameters>[^\)]*)\)/", $content, $results ) ) {
             return [];
         }
         $parameters = $results['parameters'];
@@ -117,7 +118,6 @@ class FixtureGenerator
         if(! $this->filesystem->has($path)) {
             return false;
         }
-
         $content = $this->filesystem->read($path);
 
         $has_method = $this->has_method($method, $content);

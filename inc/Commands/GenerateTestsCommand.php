@@ -5,6 +5,7 @@ namespace RocketLauncherBuilder\Commands;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\ContentGenerator;
 use RocketLauncherBuilder\Services\FixtureGenerator;
 use RocketLauncherBuilder\Services\SetUpGenerator;
 
@@ -20,7 +21,9 @@ class GenerateTestsCommand extends Command
 
     protected $fixture_generator;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator)
+    protected $content_generator;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator, ContentGenerator $content_generator)
     {
         parent::__construct('test', 'Generate test classes');
 
@@ -29,6 +32,8 @@ class GenerateTestsCommand extends Command
         $this->filesystem = $filesystem;
         $this->setup_generator = $generator;
         $this->fixture_generator = $fixture_generator;
+        $this->content_generator = $content_generator;
+
 
         $this
             ->argument('<method>', 'The method to test')
@@ -121,6 +126,7 @@ class GenerateTestsCommand extends Command
 
         $original_class_path = $this->class_generator->generate_path($original_class);
 
+
         $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
 
         if($expected === 'present') {
@@ -133,25 +139,38 @@ class GenerateTestsCommand extends Command
         $scenarios = $this->fixture_generator->generate_scenarios($original_class_path, $method_name, $has_return, $scenarios);
 
         foreach ($files as $template => $file) {
+            $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
+
+            $content_test = '';
+
+            if( $template === 'test/unit.php.tpl') {
+                $content_test = $this->content_generator->generate_unit($original_class_path, $method_name, $has_return);
+            }
+
+            if( $template === 'test/integration.php.tpl') {
+                $content_test = $this->content_generator->generate_integration($original_class_path, $method_name, $has_return);
+            }
+
             $path = $this->class_generator->generate($template, $file, [
                 'base_class' => $this->class_generator->get_fullname($class_name),
                 'base_method' => $method_name,
                 'has_group' => $group !== '',
                 'has_return' => $has_return,
                 'group' => $group,
+                'content' => $content_test,
                 'scenarios' => $scenarios
             ], true);
+
+            if( ! $path ) {
+                $io->write("The class already exists", true);
+                continue;
+            }
 
             if( $template === 'test/unit.php.tpl') {
                 $setup = $this->setup_generator->generate_set_up($original_class_path, $original_class);
                 $content = $this->filesystem->read($path);
                 $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);
                 $this->filesystem->update($path, $this->setup_generator->add_setup_to_class($setup['setup'], $content));
-            }
-
-            if( ! $path ) {
-                $io->write("The class already exists", true);
-                continue;
             }
 
             $io->write("The class is created at this path: $path", true);
@@ -176,5 +195,10 @@ class GenerateTestsCommand extends Command
             }
             return $result;
         }));
+    }
+
+    protected function generate_name(string $path) {
+        $name = basename($path);
+
     }
 }

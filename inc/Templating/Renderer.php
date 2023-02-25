@@ -55,7 +55,6 @@ class Renderer
         foreach ($ifs_mapping as $id => $value) {
             $index ++;
             $condition = $conditions[$index];
-
             foreach ($variables as $variable_name => $variable_value) {
                 if($variable_value === false) {
                     $variable_value = 'false';
@@ -65,7 +64,6 @@ class Renderer
 
             $is_true = false;
             eval('$is_true = (bool)' . $condition . ';');
-
             if($is_true) {
                 $content = str_replace($id, $contents_if[$index], $content);
                 continue;
