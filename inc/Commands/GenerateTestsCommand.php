@@ -117,14 +117,14 @@ class GenerateTestsCommand extends Command
         foreach ($files as $template => $file) {
             $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
 
-            $content = '';
+            $content_test = '';
 
             if( $template === 'test/unit.php.tpl') {
-                $content = $this->content_generator->generate_unit($original_class_path, $method_name, $has_return);
+                $content_test = $this->content_generator->generate_unit($original_class_path, $method_name, $has_return);
             }
 
             if( $template === 'test/integration.php.tpl') {
-                $content = $this->content_generator->generate_integration($original_class_path, $method_name, $has_return);
+                $content_test = $this->content_generator->generate_integration($original_class_path, $method_name, $has_return);
             }
 
             $path = $this->class_generator->generate($template, $file, [
@@ -133,7 +133,7 @@ class GenerateTestsCommand extends Command
                 'has_group' => $group !== '',
                 'has_return' => $has_return,
                 'group' => $group,
-                'content' => $content,
+                'content' => $content_test,
                 'scenarios' => $scenarios
             ], true);
 
@@ -171,5 +171,10 @@ class GenerateTestsCommand extends Command
             }
             return $result;
         }));
+    }
+
+    protected function generate_name(string $path) {
+        $name = basename($path);
+
     }
 }

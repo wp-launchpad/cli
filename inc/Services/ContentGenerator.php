@@ -33,10 +33,13 @@ class ContentGenerator
         return $this->generate($path, $method, $has_return, '/test/_partials/contentintegration.php.tpl');
     }
 
-    protected function generate(string $path, string $method, bool $has_return, string $template) {
+    protected function generate(string $path, string $method, bool $has_return, string $template, bool $has_event = false) {
         if(! $this->filesystem->has($path)) {
             return '';
         }
+
+        $class_name = str_replace('.php', '', basename($path));
+        $class_name = $this->create_id($class_name);
 
         $content = $this->filesystem->read($path);
 
@@ -44,9 +47,10 @@ class ContentGenerator
         $events = $this->get_events($method, $content);
         $is_action = $this->has_return($method, $content);
 
-        if( count($events) === 0) {
+        if( count($events) === 0 && $has_event) {
             return '';
         }
+
         $event = array_pop($events);
 
         $init = '';
@@ -60,6 +64,7 @@ class ContentGenerator
         return $this->renderer->apply_template(
             $template,
             [
+                'class' => $class_name,
                 'parameters' => $init,
                 'event'      => $event,
                 'method' => $method,
@@ -70,7 +75,7 @@ class ContentGenerator
     }
 
     public function generate_unit(string $path, string $method, bool $has_return) {
-        return $this->generate($path, $method, $has_return, '/test/_partials/contentunit.php.tpl');
+        return $this->generate($path, $method, $has_return, '/test/_partials/contentunit.php.tpl', false);
     }
 
     protected function get_events(string $method, string $content) {
@@ -99,4 +104,11 @@ class ContentGenerator
 
         return array_unique($events);
     }
+
+    protected function create_id(string $class ) {
+        $class = trim( $class, '\\' );
+        $class = str_replace( '\\', '.', $class );
+        return strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
+    }
+
 }
