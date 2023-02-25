@@ -4,8 +4,10 @@ namespace RocketLauncherBuilder\Commands;
 
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
+use RocketLauncherBuilder\Services\BootstrapManager;
 use RocketLauncherBuilder\Services\ClassGenerator;
 use RocketLauncherBuilder\Services\FixtureGenerator;
+use RocketLauncherBuilder\Services\ProjectManager;
 use RocketLauncherBuilder\Services\SetUpGenerator;
 
 class GenerateTestsCommand extends Command
@@ -20,7 +22,11 @@ class GenerateTestsCommand extends Command
 
     protected $fixture_generator;
 
-    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator)
+    protected $bootstrap_manager;
+
+    protected $project_manager;
+
+    public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator, BootstrapManager $bootstrap_manager, ProjectManager $project_manager)
     {
         parent::__construct('test', 'Generate test classes');
 
@@ -29,6 +35,8 @@ class GenerateTestsCommand extends Command
         $this->filesystem = $filesystem;
         $this->setup_generator = $generator;
         $this->fixture_generator = $fixture_generator;
+        $this->bootstrap_manager = $bootstrap_manager;
+        $this->project_manager = $project_manager;
 
         $this
             ->argument('<method>', 'The method to test')
@@ -36,6 +44,7 @@ class GenerateTestsCommand extends Command
             ->option('-g --group', 'Group from the test')
             ->option('-e --expected', 'Force the test to have an expected param from the test')
             ->option('-s --scenarios', 'Add new scenarios for the test')
+            ->option('-x --external', 'Add the integration tests as external run')
            // ->option('-n --no-expected', 'Force the test to not have an expected param from the test')
             // Usage examples:
             ->usage(
@@ -47,7 +56,7 @@ class GenerateTestsCommand extends Command
 
     // When app->handle() locates `init` command it automatically calls `execute()`
     // with correct $ball and $apple values
-    public function execute($method, $type, $group, $expected, $scenarios)
+    public function execute($method, $type, $group, $expected, $scenarios, $external)
     {
         if(! $type) {
             $type = '';
@@ -59,6 +68,10 @@ class GenerateTestsCommand extends Command
 
         if(! $expected) {
             $expected = '';
+        }
+
+        if(! $external) {
+            $external = '';
         }
 
         if(! $scenarios) {
@@ -83,11 +96,11 @@ class GenerateTestsCommand extends Command
         }
 
         foreach ($methods as $method) {
-            $this->generate_tests($class_name, $method, $type, $group, $expected, $class_name, $scenarios);
+            $this->generate_tests($class_name, $method, $type, $group, $expected, $external, $class_name, $scenarios);
         }
     }
 
-    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $original_class, array $scenarios) {
+    protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $external, string $original_class, array $scenarios) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
         $test_namespace_fixture = $namespace . 'Tests/Fixtures/inc/';
