@@ -170,7 +170,9 @@ class GenerateTestsCommand extends Command
                 'has_return' => $has_return,
                 'group' => $group,
                 'content' => $content_test,
-                'scenarios' => $scenarios
+                'scenarios' => $scenarios,
+                'external' => $external,
+                'has_external' => $external !== '',
             ], true);
 
             if( ! $path ) {
@@ -183,6 +185,11 @@ class GenerateTestsCommand extends Command
                 $content = $this->filesystem->read($path);
                 $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);
                 $this->filesystem->update($path, $this->setup_generator->add_setup_to_class($setup['setup'], $content));
+            }
+
+            if( $template === 'test/integration.php.tpl' && $external) {
+                $this->bootstrap_manager->add_external_group($external);
+                $this->project_manager->add_external_test_group($external);
             }
 
             $io->write("The class is created at this path: $path", true);
@@ -207,10 +214,5 @@ class GenerateTestsCommand extends Command
             }
             return $result;
         }));
-    }
-
-    protected function generate_name(string $path) {
-        $name = basename($path);
-
     }
 }

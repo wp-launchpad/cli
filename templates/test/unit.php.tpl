@@ -9,6 +9,9 @@ use {{ base_namespace }}Tests\Unit\TestCase;
  {% if {{ has_group }} : %}
  * @group {{ group }}
  {% endif %}
+ {% if {{ has_external }} : %}
+ * @group {{ external }}
+ {% endif %}
  */
 class Test_{{ class_name }} extends TestCase {
 
