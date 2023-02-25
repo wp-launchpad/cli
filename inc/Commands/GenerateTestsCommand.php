@@ -161,16 +161,16 @@ class GenerateTestsCommand extends Command
                 'scenarios' => $scenarios
             ], true);
 
+            if( ! $path ) {
+                $io->write("The class already exists", true);
+                continue;
+            }
+
             if( $template === 'test/unit.php.tpl') {
                 $setup = $this->setup_generator->generate_set_up($original_class_path, $original_class);
                 $content = $this->filesystem->read($path);
                 $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);
                 $this->filesystem->update($path, $this->setup_generator->add_setup_to_class($setup['setup'], $content));
-            }
-
-            if( ! $path ) {
-                $io->write("The class already exists", true);
-                continue;
             }
 
             $io->write("The class is created at this path: $path", true);

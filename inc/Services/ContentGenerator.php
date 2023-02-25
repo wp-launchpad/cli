@@ -45,7 +45,7 @@ class ContentGenerator
 
         $parameters = $this->get_parameters($method, $content);
         $events = $this->get_events($method, $content);
-        $is_action = $this->has_return($method, $content);
+        $is_action = ! $this->has_return($method, $content);
 
         if( count($events) === 0 && $has_event) {
             return '';
@@ -79,7 +79,7 @@ class ContentGenerator
     }
 
     protected function get_events(string $method, string $content) {
-        if(! preg_match('/public[ \n]+function[ \n]+get_subscribed_events[ \n]*\(([^\)])*\)([ \n]*:[ \n]*\w+)?[ \n]*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/', $content, $results)) {
+        if(! preg_match('/public[ \n]+static[ \n]+function[ \n]+get_subscribed_events[ \n]*\(([^\)])*\)([ \n]*:[ \n]*\w+)?[ \n]*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/', $content, $results)) {
             return [];
         }
 
@@ -89,7 +89,7 @@ class ContentGenerator
             return [];
         }
 
-        $values = $results['values'];
+        $values = $results['value'];
 
         $events = [];
 
