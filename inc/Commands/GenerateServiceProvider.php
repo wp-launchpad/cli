@@ -7,15 +7,11 @@ use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
 
+/**
+ * @property string|null $name Name from the service provider.
+ */
 class GenerateServiceProvider extends Command
 {
-    /**
-     * Name from the service provider.
-     *
-     * @var string
-     */
-    protected $name;
-
     /**
      * Class generator.
      *

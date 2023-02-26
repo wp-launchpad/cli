@@ -9,18 +9,11 @@ use RocketLauncherBuilder\Services\ClassGenerator;
 use RocketLauncherBuilder\Services\ProviderManager;
 use RocketLauncherBuilder\Templating\Renderer;
 
+/**
+ * @property string|null $name Name from the subscriber to generate.
+ */
 class GenerateSubscriberCommand extends Command
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $type;
-
     /**
      * Class generator.
      *

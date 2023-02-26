@@ -7,22 +7,12 @@ use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
 use RocketLauncherBuilder\Services\ProviderManager;
 
+/**
+ * @property string|null $name Name from the table to generate.
+ * @property string|null $folder Base folder for the database files.
+ */
 class GenerateTableCommand extends Command
 {
-    /**
-     * Name from the table to generate.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * Base folder for the database files.
-     *
-     * @var string
-     */
-    protected $folder;
-
     /**
      * Class generator.
      *

@@ -94,7 +94,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         $class_generator = new ClassGenerator($this->filesystem, $this->renderer, $this->configs);
         $provider_manager = new ProviderManager($app, $this->filesystem, $class_generator, $this->renderer);
 
-        $setup_generator = new SetUpGenerator($this->filesystem, $this->renderer);
+        $setup_generator = new SetUpGenerator($this->filesystem, $this->renderer, $this->configs);
 
         $fixture_generator =  new FixtureGenerator($this->filesystem, $this->renderer);
 

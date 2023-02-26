@@ -12,6 +12,9 @@ use RocketLauncherBuilder\Services\FixtureGenerator;
 use RocketLauncherBuilder\Services\ProjectManager;
 use RocketLauncherBuilder\Services\SetUpGenerator;
 
+/**
+ * @property string|null $method Method to generate tests for.
+ */
 class GenerateTestsCommand extends Command
 {
     /**
@@ -69,13 +72,6 @@ class GenerateTestsCommand extends Command
      * @var ContentGenerator
      */
     protected $content_generator;
-
-    /**
-     * Method to generate tests for.
-     *
-     * @var string
-     */
-    protected $method;
 
     /**
      * Instantiate the class.

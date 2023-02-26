@@ -3,11 +3,12 @@
 namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
+use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Templating\Renderer;
 
 class SetUpGenerator
 {
-    use CreateIDTrait;
+    use CreateIDTrait, DetectClassTrait, DetectClassTrait;
 
     /**
      * Interacts with the filesystem.
@@ -24,15 +25,24 @@ class SetUpGenerator
     protected $renderer;
 
     /**
+     * Configuration from the project.
+     *
+     * @var Configurations
+     */
+    protected $configurations;
+
+    /**
      * Instantiate the class.
      *
      * @param Filesystem $filesystem Interacts with the filesystem.
      * @param Renderer $renderer Renderer that handles layout of template files.
+     * @param Configurations $configurations Configuration from the project.
      */
-    public function __construct(Filesystem $filesystem, Renderer $renderer)
+    public function __construct(Filesystem $filesystem, Renderer $renderer, Configurations $configurations)
     {
         $this->filesystem = $filesystem;
         $this->renderer = $renderer;
+        $this->configurations = $configurations;
     }
 
     /**
@@ -122,22 +132,14 @@ class SetUpGenerator
         $usages = array_unique($usages);
         $usages = array_filter($usages);
 
+        $usages = array_map(function ($usage) use ($path) {
+            return $this->find_fullname_class($path, $usage);
+        }, $usages);
+
         return [
             'setup' => $setup,
             'usages' => $usages
         ];
-    }
-
-    /**
-     * Detect if a class is present in the content.
-     *
-     * @param string $name Name from the class.
-     * @param string $content Content to check in.
-     *
-     * @return bool
-     */
-    protected function detect_class(string $name, string $content) {
-        return (bool) preg_match("/class[\n ]+$name/", $content);
     }
 
     /**
@@ -218,5 +220,39 @@ class SetUpGenerator
         $namespace = $results['namespace'];
         $replace = $namespace . "\n$uses";
         return str_replace($namespace, $replace, $content);
+    }
+
+    /**
+     * Find the fullname from the class.
+     *
+     * @param string $path Path from the usage.
+     * @param string $class Short name from the class.
+     *
+     * @return string
+     */
+    protected function find_fullname_class(string $path, string $class) {
+
+        $base_namespace = $this->configurations->getBaseNamespace();
+
+        $base_namespace_regex_safe = preg_quote($base_namespace);
+        if( preg_match("/^$base_namespace_regex_safe/", $class) ) {
+            return $class;
+        }
+
+        $relative_path = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+        $potential_path = dirname($path) . DIRECTORY_SEPARATOR . $relative_path . '.php';
+
+        if( ! $this->filesystem->has($potential_path)) {
+            return $class;
+        }
+        $content = $this->filesystem->read($potential_path);
+        if(! $this->detect_class($class, $content)) {
+            return $class;
+        }
+
+        $base_code_folder = preg_quote($this->configurations->getCodeDir());
+        $potential_path = preg_replace("#^$base_code_folder#", $base_namespace, $potential_path);
+        $potential_path = str_replace('.php', '', $potential_path);
+        return str_replace(DIRECTORY_SEPARATOR, '\\', $potential_path);
     }
 }

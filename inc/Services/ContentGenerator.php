@@ -3,6 +3,7 @@
 namespace RocketLauncherBuilder\Services;
 
 use League\Flysystem\Filesystem;
+use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Templating\Renderer;
 
 class ContentGenerator
@@ -89,11 +90,17 @@ class ContentGenerator
             $init .= "\$config['$key_without_dollar'], ";
         }
 
+        $init = trim($init, ', ');
+
+        if( strlen( $init ) > 0 && $has_event ) {
+            $init = ', ' . $init;
+        }
+
         return $this->renderer->apply_template(
             $template,
             [
                 'class' => $class_name,
-                'parameters' => trim($init, ', '),
+                'parameters' => $init,
                 'event'      => $event,
                 'method' => $method,
                 'has_return' => $has_return,
@@ -151,5 +158,4 @@ class ContentGenerator
 
         return array_unique($events);
     }
-
 }
