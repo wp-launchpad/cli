@@ -41,7 +41,12 @@ class GenerateFixtureCommand extends Command
         $this->configurations = $configurations;
 
         $this
-            ->argument('[name]', 'Full name from the fixture');
+            ->argument('[name]', 'Full name from the fixture')
+            // Usage examples:
+            ->usage(
+            // append details or explanation of given example with ` ## ` so they will be uniformly aligned when shown
+                '<bold>  $0 fixture</end> <comment>MyClass </end> ## Create the fixture<eol/>'
+            );
     }
 
     // This method is auto called before `self::execute()` and receives `Interactor $io` instance

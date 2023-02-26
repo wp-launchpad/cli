@@ -43,9 +43,11 @@ class GenerateSubscriberCommand extends Command
             // Usage examples:
             ->usage(
             // append details or explanation of given example with ` ## ` so they will be uniformly aligned when shown
-                '<bold>  $0</end> <comment>--type common --ball ballon <arggg></end> ## details 1<eol/>' .
+                '<bold>  $0 subscriber</end> <comment>MyClass</end> ## Creates a common subscriber<eol/>' .
                 // $0 will be interpolated to actual command name
-                '<bold>  $0</end> <comment>-a applet -b ballon <arggg> [arg2]</end> ## details 2<eol/>'
+                '<bold>  $0 subscriber</end> <comment>MyClass --type common</end> ## Creates a common subscriber<eol/>' .
+                '<bold>  $0 subscriber</end> <comment>MyClass --type admin</end> ## Creates a admin subscriber<eol/>' .
+                '<bold>  $0 subscriber</end> <comment>MyClass --type front</end> ## Creates a front subscriber<eol/>'
             );
     }
 
