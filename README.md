@@ -52,9 +52,10 @@ On the test command the following options are available:
 | type       |     t        | unit          | u              | false   | Create unit tests                                                 |
 | type       |     t        | integration   | i              | false   | Create integration tests                                          |
 | group      |     g        | your value    | your value     | false   | Add a group to tests                                              |
-| expected   |     e        | present       | present        | false   | Force the expected parameter on tests                             |
-| expected   |     e        | absent        | absent         | false   | Force the expected parameter to be absent on tests                |
-| scenarios  |     s        | value1,value2 | value1,value2  | false   | Add scenarios to the fixtures from the tests tests                |
+| expected   |     e        | present       | p              | false   | Force the expected parameter on tests                             |
+| expected   |     e        | absent        | a              | false   | Force the expected parameter to be absent on tests                |
+| scenarios  |     s        | value1,value2 | value1,value2  | false   | Add scenarios to the fixtures from the tests                      |
+| external   |     x        | your value    | your value     | false   | Add external run for integration tests                            |
 
 ## Table
 To create a service provider run the following command: `table my_table Mynamespace`.
