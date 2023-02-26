@@ -102,6 +102,11 @@ class GenerateTestsCommand extends Command
         foreach ($methods as $method) {
             $this->generate_tests($class_name, $method, $type, $group, $expected, $external, $class_name, $scenarios);
         }
+
+        if( in_array($type, ['', 'b', 'both', 'i', 'integration'])) {
+            $this->bootstrap_manager->add_external_group($external);
+            $this->project_manager->add_external_test_group($external);
+        }
     }
 
     protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $external, string $original_class, array $scenarios) {
@@ -185,11 +190,6 @@ class GenerateTestsCommand extends Command
                 $content = $this->filesystem->read($path);
                 $content = $this->setup_generator->add_usage_to_class($setup['usages'], $content);
                 $this->filesystem->update($path, $this->setup_generator->add_setup_to_class($setup['setup'], $content));
-            }
-
-            if( $template === 'test/integration.php.tpl' && $external) {
-                $this->bootstrap_manager->add_external_group($external);
-                $this->project_manager->add_external_test_group($external);
             }
 
             $io->write("The class is created at this path: $path", true);

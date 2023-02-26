@@ -38,13 +38,17 @@ class ProjectManager
         $scripts = $json['scripts'];
 
         $group_key = $this->create_id($group);
-        $scripts['run-tests'][] = "@$group_key";
+        if (! in_array("@$group_key", $scripts['run-tests'])) {
+            $scripts['run-tests'][] = "@$group_key";
+        }
         $scripts[$group_key] = "\"vendor/bin/phpunit\" --testsuite integration --colors=always --configuration tests/Integration/phpunit.xml.dist --group $group";
-        $scripts['test-integration'] .= ",$group";
+        if(preg_match("/,$group,|$/", $scripts['test-integration'])) {
+            $scripts['test-integration'] .= ",$group";
+        }
 
         $json['scripts'] = $scripts;
 
-        $content = json_encode($json);
+        $content = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
         $this->filesystem->update(self::COMPOSER_FILE, $content);
 
         return true;

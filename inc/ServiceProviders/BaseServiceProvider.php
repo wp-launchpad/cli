@@ -80,7 +80,7 @@ class BaseServiceProvider implements ServiceProviderInterface
 
         $project_manager = new ProjectManager($this->filesystem);
 
-        $bootstrap_manager = new BootstrapManager($this->filesystem, $this->configs);
+        $bootstrap_manager = new BootstrapManager($this->filesystem, $this->configs, $this->renderer);
 
         $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager));
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
