@@ -2,6 +2,7 @@
 
 namespace RocketLauncherBuilder\Commands;
 
+use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
@@ -40,7 +41,16 @@ class GenerateFixtureCommand extends Command
         $this->configurations = $configurations;
 
         $this
-            ->argument('<name>', 'Full name from the fixture');
+            ->argument('[name]', 'Full name from the fixture');
+    }
+
+    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    public function interact(Interactor $io)
+    {
+        // Collect missing opts/args
+        if (!$this->name) {
+            $this->set('name', $io->prompt('Enter name from the fixture'));
+        }
     }
 
     // When app->handle() locates `init` command it automatically calls `execute()`

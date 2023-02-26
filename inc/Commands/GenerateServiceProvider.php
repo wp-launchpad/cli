@@ -2,6 +2,7 @@
 
 namespace RocketLauncherBuilder\Commands;
 
+use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\ClassGenerator;
@@ -25,7 +26,7 @@ class GenerateServiceProvider extends Command
         $this->class_generator = $class_generator;
 
         $this
-            ->argument('<name>', 'Full name from the service provider')
+            ->argument('[name]', 'Full name from the service provider')
             // Usage examples:
             ->usage(
             // append details or explanation of given example with ` ## ` so they will be uniformly aligned when shown
@@ -33,6 +34,15 @@ class GenerateServiceProvider extends Command
                 // $0 will be interpolated to actual command name
                 '<bold>  $0</end> <comment>-a applet -b ballon <arggg> [arg2]</end> ## details 2<eol/>'
             );
+    }
+
+    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    public function interact(Interactor $io)
+    {
+        // Collect missing opts/args
+        if (!$this->name) {
+            $this->set('name', $io->prompt('Enter name from the service provider'));
+        }
     }
 
     // When app->handle() locates `init` command it automatically calls `execute()`

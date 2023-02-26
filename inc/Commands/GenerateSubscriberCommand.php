@@ -2,6 +2,7 @@
 
 namespace RocketLauncherBuilder\Commands;
 
+use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\ObjectValues\SubscriberType;
 use RocketLauncherBuilder\Services\ClassGenerator;
@@ -37,7 +38,7 @@ class GenerateSubscriberCommand extends Command
         $this->service_provider_manager = $service_provider_manager;
 
         $this
-            ->argument('<name>', 'Full name from the subscriber')
+            ->argument('[name]', 'Full name from the subscriber')
             ->option('-t --type', 'Type of subscriber')
             // Usage examples:
             ->usage(
@@ -46,6 +47,15 @@ class GenerateSubscriberCommand extends Command
                 // $0 will be interpolated to actual command name
                 '<bold>  $0</end> <comment>-a applet -b ballon <arggg> [arg2]</end> ## details 2<eol/>'
             );
+    }
+
+    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    public function interact(Interactor $io)
+    {
+        // Collect missing opts/args
+        if (!$this->name) {
+            $this->set('name', $io->prompt('Enter name from the subscriber'));
+        }
     }
 
     // When app->handle() locates `init` command it automatically calls `execute()`
