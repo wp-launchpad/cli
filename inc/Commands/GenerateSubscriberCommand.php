@@ -11,24 +11,44 @@ use RocketLauncherBuilder\Templating\Renderer;
 
 class GenerateSubscriberCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected $name;
 
-    protected $type;
     /**
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * Class generator.
+     *
      * @var ClassGenerator
      */
     protected $class_generator;
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Handle operations with service providers.
+     *
      * @var ProviderManager
      */
     protected $service_provider_manager;
 
+    /**
+     * Instantiate the class.
+     *
+     * @param ClassGenerator $class_generator Class generator.
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param ProviderManager $service_provider_manager Handle operations with service providers.
+     */
     public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, ProviderManager $service_provider_manager)
     {
         parent::__construct('subscriber', 'Generate subscriber class');
@@ -51,7 +71,12 @@ class GenerateSubscriberCommand extends Command
             );
     }
 
-    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    /**
+     * Interacts with the user to get missing values.
+     *
+     * @param Interactor $io Interface to interact with the user.
+     * @return void
+     */
     public function interact(Interactor $io)
     {
         // Collect missing opts/args
@@ -60,8 +85,13 @@ class GenerateSubscriberCommand extends Command
         }
     }
 
-    // When app->handle() locates `init` command it automatically calls `execute()`
-    // with correct $ball and $apple values
+    /**
+     * Execute the command.
+     *
+     * @param string|null $name
+     * @param string|null $type
+     * @return void
+     */
     public function execute($name, $type)
     {
         $io = $this->app()->io();

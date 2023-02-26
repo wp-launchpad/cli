@@ -7,21 +7,27 @@ use RocketLauncherBuilder\Templating\Renderer;
 
 class ContentGenerator
 {
-    use DetectReturnTrait, DetectParametersTrait;
+    use DetectReturnTrait, DetectParametersTrait, CreateIDTrait;
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
-     * @param Filesystem $filesystem
-     * @param Renderer $renderer
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param Renderer $renderer Renderer that handles layout of template files.
      */
     public function __construct(Filesystem $filesystem, Renderer $renderer)
     {
@@ -29,10 +35,32 @@ class ContentGenerator
         $this->renderer = $renderer;
     }
 
+    /**
+     * Generate content for an integration test.
+     *
+     * @param string $path Path to the class to test.
+     * @param string $method Method to test.
+     * @param bool $has_return Does the class return a value.
+     *
+     * @return string
+     */
     public function generate_integration(string $path, string $method, bool $has_return) {
         return $this->generate($path, $method, $has_return, '/test/_partials/contentintegration.php.tpl');
     }
 
+    /**
+     * Generate content for a test.
+     *
+     * @param string $path Path to the class to test.
+     * @param string $method Method to test.
+     * @param bool $has_return Does the class return a value.
+     * @param string $template Template from the test.
+     * @param bool $has_event Does the test should have an event.
+     *
+     * @return string
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     protected function generate(string $path, string $method, bool $has_return, string $template, bool $has_event = true) {
         if(! $this->filesystem->has($path)) {
             return '';
@@ -74,10 +102,29 @@ class ContentGenerator
         );
     }
 
+    /**
+     * Generate content for an unit test.
+     *
+     * @param string $path Path to the class to test.
+     * @param string $method Method to test.
+     * @param bool $has_return Does the class return a value.
+     *
+     * @return string
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     public function generate_unit(string $path, string $method, bool $has_return) {
         return $this->generate($path, $method, $has_return, '/test/_partials/contentunit.php.tpl', false);
     }
 
+    /**
+     * Get events a method is registered to.
+     *
+     * @param string $method Method registered.
+     * @param string $content Content to search in.
+     *
+     * @return array
+     */
     protected function get_events(string $method, string $content) {
         if(! preg_match('/public[ \n]+static[ \n]+function[ \n]+get_subscribed_events[ \n]*\(([^\)])*\)([ \n]*:[ \n]*\w+)?[ \n]*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/', $content, $results)) {
             return [];
@@ -103,12 +150,6 @@ class ContentGenerator
         }
 
         return array_unique($events);
-    }
-
-    protected function create_id(string $class ) {
-        $class = trim( $class, '\\' );
-        $class = str_replace( '\\', '.', $class );
-        return strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
     }
 
 }

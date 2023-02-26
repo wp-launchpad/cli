@@ -12,7 +12,10 @@ class AppBuilder
 {
 
     /**
-     * @param string[] $service_providers
+     *  Initiate the CLI.
+     *
+     * @param string $project_dir Base directory from the project.
+     * @param string[] $service_providers Service providers to add to the CLI.
      */
     public static function init(string $project_dir, array $service_providers = [])
     {

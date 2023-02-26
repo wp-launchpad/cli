@@ -8,18 +8,24 @@ use RocketLauncherBuilder\Entities\Configurations;
 class ConfigurationResolver
 {
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Base directory from the project.
+     *
      * @var string
      */
     protected $project_dir;
 
     /**
-     * @param Filesystem $filesystem
-     * @param string $project_dir
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param string $project_dir Base directory from the project.
      */
     public function __construct(Filesystem $filesystem, string $project_dir)
     {
@@ -27,6 +33,12 @@ class ConfigurationResolver
         $this->project_dir = $project_dir;
     }
 
+    /**
+     * Get configurations from the project.
+     *
+     * @return Configurations
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function get_configuration() {
         $composer_json = json_decode($this->filesystem->read( 'composer.json'), true);
         $namespaces = array_keys($composer_json["autoload"]["psr-4"]);

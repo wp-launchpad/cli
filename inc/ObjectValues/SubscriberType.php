@@ -11,10 +11,17 @@ class SubscriberType
 
     const VALUES = [self::ADMIN, self::FRONT, self::COMMON];
 
+    /**
+     * Value validated by the object value.
+     *
+     * @var string
+     */
     protected $value;
 
     /**
-     * @param $value
+     * Instantiate the class.
+     *
+     * @param string $value value validated by the object value.
      */
     public function __construct(string $value)
     {
@@ -23,14 +30,24 @@ class SubscriberType
     }
 
     /**
-     * @return mixed
+     * Get the value.
+     *
+     * @return string
      */
     public function getValue()
     {
         return $this->value;
     }
 
-    public function validate(string $value) {
+    /**
+     * Validate the value.
+     *
+     * @param string $value Value to validate.
+     *
+     * @return void
+     * @throws InvalidValue
+     */
+    protected function validate(string $value) {
         if(! in_array($value, self::VALUES, true)) {
             throw new InvalidValue();
         }

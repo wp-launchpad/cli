@@ -9,28 +9,40 @@ use RocketLauncherBuilder\Services\ClassGenerator;
 
 class GenerateFixtureCommand extends Command
 {
-
+    /**
+     * Name from the fixture to generate.
+     *
+     * @var string
+     */
     protected $name;
 
     /**
+     * Class generator.
+     *
      * @var ClassGenerator
      */
     protected $class_generator;
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Configuration from the project.
+     *
      * @var Configurations
      */
     protected $configurations;
 
     /**
-     * @param ClassGenerator $class_generator
-     * @param Filesystem $filesystem
-     * @param Configurations $configurations
+     * Instantiate the class.
+     *
+     * @param ClassGenerator $class_generator Class generator.
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param Configurations $configurations Configuration from the project.
      */
     public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, Configurations $configurations)
     {
@@ -49,7 +61,12 @@ class GenerateFixtureCommand extends Command
             );
     }
 
-    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    /**
+     * Interacts with the user to get missing values.
+     *
+     * @param Interactor $io Interface to interact with the user.
+     * @return void
+     */
     public function interact(Interactor $io)
     {
         // Collect missing opts/args
@@ -58,8 +75,13 @@ class GenerateFixtureCommand extends Command
         }
     }
 
-    // When app->handle() locates `init` command it automatically calls `execute()`
-    // with correct $ball and $apple values
+    /**
+     * Execute the command.
+     *
+     * @param string|null $name Name from the fixture to generate.
+     * @return void
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function execute($name)
     {
         $io = $this->app()->io();

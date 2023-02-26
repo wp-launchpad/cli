@@ -14,24 +14,81 @@ use RocketLauncherBuilder\Services\SetUpGenerator;
 
 class GenerateTestsCommand extends Command
 {
+    /**
+     * Class generator.
+     *
+     * @var ClassGenerator
+     */
     protected $class_generator;
 
+    /**
+     * Configuration from the project.
+     *
+     * @var Configurations
+     */
     protected $configurations;
 
+    /**
+     * Interacts with the filesystem.
+     *
+     * @var Filesystem
+     */
     protected $filesystem;
 
+    /**
+     * Generates set_up method.
+     *
+     * @var SetUpGenerator
+     */
     protected $setup_generator;
 
+    /**
+     * Generates fixture files.
+     *
+     * @var FixtureGenerator
+     */
     protected $fixture_generator;
 
+    /**
+     * Handles operations related to the bootstrap file.
+     *
+     * @var BootstrapManager
+     */
     protected $bootstrap_manager;
 
+    /**
+     * Handles operations related to the project files.
+     *
+     * @var ProjectManager
+     */
     protected $project_manager;
 
+    /**
+     * Generate content from the test.
+     *
+     * @var ContentGenerator
+     */
     protected $content_generator;
 
+    /**
+     * Method to generate tests for.
+     *
+     * @var string
+     */
     protected $method;
 
+    /**
+     * Instantiate the class.
+     *
+     * @param ClassGenerator $class_generator Class generator.
+     * @param Configurations $configurations Configuration from the project.
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param SetUpGenerator $generator Generates set_up method.
+     * @param FixtureGenerator $fixture_generator Generates fixture files.
+     * @param ContentGenerator $content_generator Generate content from the test.
+     * @param BootstrapManager $bootstrap_manager Handles operations related to the bootstrap file.
+     * @param ProjectManager $project_manager Handles operations related to the project files.
+     */
     public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator, ContentGenerator $content_generator, BootstrapManager $bootstrap_manager, ProjectManager $project_manager)
     {
         parent::__construct('test', 'Generate test classes');
@@ -60,7 +117,12 @@ class GenerateTestsCommand extends Command
             );
     }
 
-    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    /**
+     * Interacts with the user to get missing values.
+     *
+     * @param Interactor $io Interface to interact with the user.
+     * @return void
+     */
     public function interact(Interactor $io)
     {
         // Collect missing opts/args
@@ -69,8 +131,18 @@ class GenerateTestsCommand extends Command
         }
     }
 
-    // When app->handle() locates `init` command it automatically calls `execute()`
-    // with correct $ball and $apple values
+    /**
+     * Execute the command.
+     *
+     * @param string|null $method Method to generate tests for.
+     * @param string|null $type Type from the tests to generate.
+     * @param string|null $group Group from the tests to generate.
+     * @param string|null $expected Force the expected param to be present or absent.
+     * @param string|null $scenarios Scenarios from the tests to generate.
+     * @param string|null $external Create external run for integration tests.
+     *
+     * @return void
+     */
     public function execute($method, $type, $group, $expected, $scenarios, $external)
     {
         if(! $type) {
@@ -120,6 +192,22 @@ class GenerateTestsCommand extends Command
         }
     }
 
+    /**
+     * Generate tests for a method.
+     *
+     * @param string $class_name Class to generate tests for.
+     * @param string $method_name Method to generate tests for.
+     * @param string $type Type from the tests to generate.
+     * @param string $group Group from the tests to generate.
+     * @param string $expected Force the expected param to be present or absent.
+     * @param string $external Create external run for integration tests.
+     * @param string $original_class Original name from the class.
+     * @param array $scenarios Scenarios from the tests to generate.
+     * @return void
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $external, string $original_class, array $scenarios) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());
 
@@ -207,6 +295,14 @@ class GenerateTestsCommand extends Command
         }
     }
 
+    /**
+     * Get public functions from a class.
+     *
+     * @param string $class class to get the public function from.
+     *
+     * @return array
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     protected function get_public_functions(string $class): array {
         if(! $this->class_generator->exists($class)) {
             return [];

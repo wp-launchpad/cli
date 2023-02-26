@@ -10,18 +10,30 @@ class ProjectManager
     CONST COMPOSER_FILE = 'composer.json';
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
-     * @param Filesystem $filesystem
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
      */
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * Add an external run for a group.
+     *
+     * @param string $group Group to create the external run.
+     *
+     * @return bool
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function add_external_test_group(string $group) {
 
         if( ! $this->filesystem->has(self::COMPOSER_FILE)) {
@@ -54,6 +66,13 @@ class ProjectManager
         return true;
     }
 
+    /**
+     * Create an ID from the class.
+     *
+     * @param string $class Class to create the ID from.
+     *
+     * @return string
+     */
     protected function create_id(string $class ) {
         $class = trim( $class, '\\' );
         $class = str_replace( '\\', '.', $class );

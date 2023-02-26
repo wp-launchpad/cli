@@ -6,6 +6,9 @@ use League\Flysystem\Filesystem;
 
 class Renderer
 {
+    /**
+     * @var string Folder where templates are.
+     */
     public $templates_folder;
 
     /**
@@ -13,6 +16,12 @@ class Renderer
      */
     protected $filesystem;
 
+    /**
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param string $templates_folder Folder where templates are.
+     */
     public function __construct(Filesystem $filesystem, string $templates_folder)
     {
         $this->filesystem = $filesystem;
@@ -20,6 +29,13 @@ class Renderer
     }
 
     /**
+     * Apply variables to the template.
+     *
+     * @param string $template_name Path to the template.
+     * @param array<string,mixed> $variables Variables to apply to the template.
+     *
+     * @return string
+     *
      * @throws FileNotFoundException
      */
     public function apply_template(string $template_name, array $variables = []): string
@@ -35,6 +51,13 @@ class Renderer
         return $template;
     }
 
+    /**
+     * Apply if from the template.
+     *
+     * @param string $content Content from the template.
+     * @param array $variables Variables to apply to the template.
+     * @return string
+     */
     protected function apply_ifs(string $content, array $variables = []): string {
         if ( ! preg_match_all('/ *\{%[ \n]+if[ \n]+(?<condition>[^:]+):[ \n]+%\}\n?(?<content_if>[\s\S]*?)( *\n?\{%[ \n]+else[ \n]+%\}\n?(?<content_else>[\s\S]*?))? *\n?\{%[ \n]+endif[ \n]+%\}\n?/m', $content, $results)) {
             return $content;
@@ -76,8 +99,12 @@ class Renderer
     }
 
     /**
-     * @param string $template
+     * Get the content from the template from its path.
+     *
+     * @param string $template Path from the template.
+     *
      * @return string
+     *
      * @throws FileNotFoundException
      */
     public function get_template(string $template): string

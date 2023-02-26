@@ -4,6 +4,14 @@ namespace RocketLauncherBuilder\Services;
 
 trait DetectParametersTrait
 {
+    /**
+     * Get parameters from the method.
+     *
+     * @param string $method Method to search.
+     * @param string $content Content to search in.
+     *
+     * @return array<string,string|null>
+     */
     protected function get_parameters(string $method, string $content) {
         if ( ! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\((?<parameters>[^\)]*)\)/", $content, $results ) ) {
             return [];

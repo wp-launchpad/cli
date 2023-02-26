@@ -24,25 +24,40 @@ class BaseServiceProvider implements ServiceProviderInterface
 {
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
+     * Configuration from the project.
+     *
      * @var Configurations
      */
     protected $configs;
 
     /**
+     * Base directory from the project.
+     *
      * @var string
      */
     protected $project_dir;
 
+    /**
+     * Instantiate the class.
+     *
+     * @param Configurations $configs configuration from the project.
+     * @param string $project_dir base directory from the project.
+     * @param string $app_dir base directory from the cli.
+     */
     public function __construct(Configurations $configs, string $project_dir, string $app_dir)
     {
         $this->configs = $configs;
@@ -67,6 +82,13 @@ class BaseServiceProvider implements ServiceProviderInterface
         $this->renderer = new Renderer($template_filesystem, '/templates/');
     }
 
+    /**
+     * Attach commands from the service provider to the cli.
+     *
+     * @param App $app cli.
+     *
+     * @return App
+     */
     public function attach_commands(App $app): App
     {
         $class_generator = new ClassGenerator($this->filesystem, $this->renderer, $this->configs);
@@ -87,6 +109,7 @@ class BaseServiceProvider implements ServiceProviderInterface
         $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
         $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator, $fixture_generator, $content_generator, $bootstrap_manager, $project_manager));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
+
         return $app;
     }
 }

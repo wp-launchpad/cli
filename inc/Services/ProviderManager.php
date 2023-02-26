@@ -16,24 +16,33 @@ class ProviderManager
     protected $app;
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Class generator.
+     *
      * @var ClassGenerator
      */
     protected $class_generator;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
-     * @param App $app
-     * @param Filesystem $filesystem
-     * @param ClassGenerator $class_generator
+     * Instantiate the class.
+     *
+     * @param App $app CLI.
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param ClassGenerator $class_generator Class generator.
+     * @param Renderer $renderer Renderer that handles layout of template files.
      */
     public function __construct(App $app, Filesystem $filesystem, ClassGenerator $class_generator, Renderer $renderer)
     {
@@ -43,6 +52,13 @@ class ProviderManager
         $this->renderer = $renderer;
     }
 
+    /**
+     * Generate a service provider if it doesn't exist.
+     *
+     * @param string $namespace Namespace to create the service provider in.
+     *
+     * @return void
+     */
     public function maybe_generate_service_provider(string $namespace ) {
         $service_provider_path = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider.php';
         $service_provider_name = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider';
@@ -55,6 +71,15 @@ class ProviderManager
         }
     }
 
+    /**
+     * Register a new class to the service provider.
+     *
+     * @param string $path Path to the service provider.
+     * @param string $class Class to add to the service provider.
+     *
+     * @return void
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function add_class(string $path, string $class) {
         $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
@@ -76,6 +101,16 @@ class ProviderManager
         $this->filesystem->update( $provider_path, $provider_content );
     }
 
+    /**
+     * Register a subscriber to the service provider.
+     *
+     * @param string $id ID from the subscriber.
+     * @param string $path Path from the service provider.
+     * @param SubscriberType $type Type from the subscriber.
+     *
+     * @return void
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function register_subscriber(string $id, string $path, SubscriberType $type) {
         $provider_path = $this->class_generator->generate_path($path. '/ServiceProvider.php');
         $provider_content = $this->filesystem->read( $provider_path );
@@ -93,7 +128,17 @@ class ProviderManager
         $this->filesystem->update($provider_path, $provider_content);
     }
 
-    protected function add_to_subscriber_method($id, string $method, string $content): string {
+    /**
+     * Add the subscriber to the method.
+     *
+     * @param string $id ID from the subscriber.
+     * @param string $method Method to register the subscriber to.
+     * @param string $content Content from the service provider.
+     *
+     * @return string
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
+    protected function add_to_subscriber_method(string $id, string $method, string $content): string {
         if ( ! preg_match('/public function ' . $method . '\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/', $content, $results ) ) {
             preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
             $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
@@ -107,6 +152,15 @@ class ProviderManager
         return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n$indents{\n$results$indents}", $content);
     }
 
+    /**
+     * Instantiate a class inside the service provider.
+     *
+     * @param string $class Class to add to the service provider.
+     * @param string $path Path from the service provider.
+     *
+     * @return void
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function instantiate(string $class, string $path) {
         $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider.php' );
         $provider_content = $this->filesystem->read( $provider_path );

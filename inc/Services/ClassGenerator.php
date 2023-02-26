@@ -8,25 +8,35 @@ use RocketLauncherBuilder\Templating\Renderer;
 
 class ClassGenerator
 {
+    use CreateIDTrait;
+
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
+     * Configuration from the project.
+     *
      * @var Configurations
      */
     protected $configurations;
 
     /**
-     * @param Filesystem $filesystem
-     * @param Renderer $renderer
-     * @param Configurations $configurations
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param Renderer $renderer Renderer that handles layout of template files.
+     * @param Configurations $configurations Configuration from the project.
      */
     public function __construct(Filesystem $filesystem, Renderer $renderer, Configurations $configurations)
     {
@@ -35,29 +45,58 @@ class ClassGenerator
         $this->configurations = $configurations;
     }
 
+    /**
+     * Get the basename from a class.
+     *
+     * @param string $name Class fullname.
+     *
+     * @return string
+     */
     public function get_basename(string $name ): string {
         return basename( $name );
     }
 
+    /**
+     * Get dirname from a class.
+     *
+     * @param string $name Class fullname.
+     *
+     * @return string
+     */
     public function get_dirname( string $name): string {
         return implode('/', array_slice(explode('/', $name), 0, -1));
     }
 
+    /**
+     * Get fullname from a class.
+     *
+     * @param string $name Class fullname.
+     *
+     * @return string
+     */
     public function get_fullname( string $name ): string {
         return '\\' . str_replace('/', '\\', $name);
     }
 
+    /**
+     * Check if a class exists.
+     *
+     * @param string $name Name from the class.
+     *
+     * @return bool
+     */
     public function exists( string $name ): bool {
-
         return $this->filesystem->has($this->generate_path( $name ) );
     }
 
-    public function create_id(string $class ) {
-        $class = trim( $class, '\\' );
-        $class = str_replace( '\\', '.', $class );
-        return strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
-    }
-
+    /**
+     * Generate path from a class name.
+     *
+     * @param string $name Class name.
+     * @param bool $is_test Is the class a test class.
+     *
+     * @return string
+     */
     public function generate_path( string $name, bool $is_test = false ): string {
         $base_namespace = $is_test ? $this->configurations->getBaseNamespace() . 'Tests\\': $this->configurations->getBaseNamespace();
 
@@ -72,6 +111,18 @@ class ClassGenerator
             ) . '.php';
     }
 
+    /**
+     * Generate a class.
+     *
+     * @param string $template Template to use for the class.
+     * @param string $class_name Name from the class to generate.
+     * @param array $variables Variables to pass to the template.
+     * @param bool $is_test Is the class a test class.
+     *
+     * @return false|string
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     public function generate(string $template, string $class_name, array $variables = [], bool $is_test = false) {
         $basename = $this->get_basename( $class_name );
         $namespace = implode('\\', array_slice(explode('/', $class_name), 0, -1));
@@ -106,7 +157,13 @@ class ClassGenerator
         return $path;
     }
 
-    public function snake_to_camel_case($string) {
+    /**
+     * Convert String from snake case to camel case.
+     * @param string $string string to convert.
+     *
+     * @return string
+     */
+    public function snake_to_camel_case(string $string) {
         $result = str_replace('_', '', ucwords($string, '_'));
         return lcfirst($result);
     }

@@ -9,18 +9,48 @@ use RocketLauncherBuilder\Services\ProviderManager;
 
 class GenerateTableCommand extends Command
 {
+    /**
+     * Name from the table to generate.
+     *
+     * @var string
+     */
     protected $name;
+
+    /**
+     * Base folder for the database files.
+     *
+     * @var string
+     */
     protected $folder;
 
+    /**
+     * Class generator.
+     *
+     * @var ClassGenerator
+     */
     protected $class_generator;
 
+    /**
+     * Configuration from the project.
+     *
+     * @var Configurations
+     */
     protected $configurations;
 
     /**
+     * Handle operations with service providers.
+     *
      * @var ProviderManager
      */
     protected $service_provider_manager;
 
+    /**
+     * Instantiate the class.
+     *
+     * @param ClassGenerator $class_generator Class generator.
+     * @param Configurations $configurations Configuration from the project.
+     * @param ProviderManager $service_provider_manager Handle operations with service providers.
+     */
     public function __construct(ClassGenerator $class_generator, Configurations $configurations, ProviderManager $service_provider_manager)
     {
         parent::__construct('table', 'Generate table classes');
@@ -39,7 +69,13 @@ class GenerateTableCommand extends Command
             );
     }
 
-    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    /**
+     * Interacts with the user to get missing values.
+     *
+     * @param Interactor $io Interface to interact with the user.
+     *
+     * @return void
+     */
     public function interact(Interactor $io)
     {
         // Collect missing opts/args
@@ -52,8 +88,14 @@ class GenerateTableCommand extends Command
         }
     }
 
-    // When app->handle() locates `init` command it automatically calls `execute()`
-    // with correct $ball and $apple values
+    /**
+     * Execute the command.
+     *
+     * @param string|null $name Name from the table to generate.
+     * @param string|null $folder Base folder for the database files.
+     *
+     * @return void
+     */
     public function execute($name, $folder)
     {
         $io = $this->app()->io();

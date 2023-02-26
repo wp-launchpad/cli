@@ -5,24 +5,32 @@ namespace RocketLauncherBuilder\Entities;
 class Configurations
 {
     /**
+     * Base namespace from the project.
+     *
      * @var string
      */
     protected $base_namespace;
 
     /**
+     * Base directory from the code of the project.
+     *
      * @var string
      */
     protected $code_dir;
 
     /**
+     * Base directory from the tests of the project.
+     *
      * @var string
      */
     protected $test_dir;
 
     /**
-     * @param string $base_namespace
-     * @param string $code_dir
-     * @param string $test_dir
+     * Instantiate the class.
+     *
+     * @param string $base_namespace Base namespace from the project.
+     * @param string $code_dir Base directory from the code of the project.
+     * @param string $test_dir Base directory from the tests of the project.
      */
     public function __construct(string $base_namespace, string $code_dir, string $test_dir)
     {
@@ -32,6 +40,8 @@ class Configurations
     }
 
     /**
+     * Get the base namespace from the project.
+     *
      * @return string
      */
     public function getBaseNamespace(): string
@@ -40,6 +50,8 @@ class Configurations
     }
 
     /**
+     * Get the base directory from the code of the project.
+     *
      * @return string
      */
     public function getCodeDir(): string
@@ -48,14 +60,12 @@ class Configurations
     }
 
     /**
+     * Get the base directory from the tests of the project.
+     *
      * @return string
      */
     public function getTestDir(): string
     {
         return $this->test_dir;
     }
-
-
-
-
 }

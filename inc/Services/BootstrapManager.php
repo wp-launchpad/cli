@@ -11,24 +11,32 @@ class BootstrapManager
     const BOOTSTRAP_FILE = '/Integration/bootstrap.php';
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Configuration from the project.
+     *
      * @var Configurations
      */
     protected $configuration;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
-     * @param Filesystem $filesystem
-     * @param Configurations $configuration
-     * @param Renderer $renderer
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param Configurations $configuration Configuration from the project.
+     * @param Renderer $renderer Renderer that handles layout of template files.
      */
     public function __construct(Filesystem $filesystem, Configurations $configuration, Renderer $renderer)
     {
@@ -37,6 +45,15 @@ class BootstrapManager
         $this->renderer = $renderer;
     }
 
+    /**
+     * Add external group to the bootstrap.
+     *
+     * @param string $group Group to add.
+     *
+     * @return bool
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     public function add_external_group(string $group) {
 
         $bootstrap_path = $this->configuration->getTestDir() . self::BOOTSTRAP_FILE;
@@ -70,6 +87,13 @@ class BootstrapManager
         return true;
     }
 
+    /**
+     * Add usage to the bootstrap file if missing.
+     *
+     * @param string $content Content from the bootstrap file.
+     *
+     * @return string
+     */
     protected function maybe_add_usage(string $content) {
         if( preg_match('/use[ \n]+WPMedia\\\PHPUnit\\\BootstrapManager;/', $content)) {
             return $content;

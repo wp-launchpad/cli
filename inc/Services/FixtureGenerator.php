@@ -7,21 +7,27 @@ use RocketLauncherBuilder\Templating\Renderer;
 
 class FixtureGenerator
 {
-    use DetectReturnTrait;
+    use DetectReturnTrait, DetectParametersTrait;
 
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
-     * @param Filesystem $filesystem
-     * @param Renderer $renderer
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param Renderer $renderer Renderer that handles layout of template files.
      */
     public function __construct(Filesystem $filesystem, Renderer $renderer)
     {
@@ -30,7 +36,18 @@ class FixtureGenerator
     }
 
 
-
+    /**
+     * Generate scenarios for the test.
+     *
+     * @param string $path Path from the test file.
+     * @param string $method Method to test.
+     * @param bool $has_return_value Should the test have a return value.
+     * @param array $scenarios Scenarios to add to fixtures.
+     *
+     * @return string
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     public function generate_scenarios(string $path, string $method, bool $has_return_value, array $scenarios) {
         if(! $this->filesystem->has($path)) {
             return '';
@@ -70,50 +87,27 @@ class FixtureGenerator
         return $output;
     }
 
+    /**
+     * Check if the content has the method.
+     *
+     * @param string $method Method to search.
+     * @param string $content Content to search in.
+     *
+     * @return bool
+     */
     protected function has_method(string $method, string $content) {
-        return preg_match("/public[ \n]+function[ \n]+$method/", $content );
+        return (bool) preg_match("/public[ \n]+function[ \n]+$method/", $content );
     }
 
-    protected function get_parameters(string $method, string $content) {
-        if ( ! preg_match("/public[ \n]+function[ \n]+{$method}[ \n]*\((?<parameters>[^\)]*)\)/", $content, $results ) ) {
-            return [];
-        }
-        $parameters = $results['parameters'];
-
-        if(! preg_match_all('/(?<type>\w+)?[ \n]+(?<name>\$\w+)/m', $parameters, $results) ||
-            !key_exists('name', $results)) {
-            return [];
-        }
-        $types = $results['type'];
-        $names = $results['name'];
-
-        $ouput = array_combine($names, $types);
-
-        if(! $ouput) {
-            return [];
-        }
-
-        return $ouput;
-    }
-
-    protected function has_return(string $method, string $content) {
-        if(preg_match("/\/\*\*(?<docblock>[^\/]+)\/[ \n]+public[ \n]+function[ \n]+{$method}/", $content, $results) && preg_match('/@return (void|null)/', $results['docblock'])) {
-                return false;
-        }
-
-        if(! preg_match("/function\s+{$method}\([^\)]*\)(?<return>[ \n]*:[ \n]*\w+)?\s*(?<content>\{((?:[^{}]+|\{(?3)\})*)\})/", $content, $results ) ) {
-            return false;
-        }
-
-        $content = $results['content'];
-
-        if(key_exists('return', $results) && strpos($results['return'], 'void') === false) {
-            return true;
-        }
-
-        return preg_match('/return\s+([^;]+);/', $content);
-    }
-
+    /**
+     * Check if the method returns something.
+     *
+     * @param string $path Path from the file to search in.
+     * @param string $method Content to search in.
+     *
+     * @return bool
+     * @throws \League\Flysystem\FileNotFoundException
+     */
     public function method_has_return(string $path, string $method) {
         if(! $this->filesystem->has($path)) {
             return false;

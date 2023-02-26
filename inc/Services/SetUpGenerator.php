@@ -7,19 +7,27 @@ use RocketLauncherBuilder\Templating\Renderer;
 
 class SetUpGenerator
 {
+    use CreateIDTrait;
+
     /**
+     * Interacts with the filesystem.
+     *
      * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * Renderer that handles layout of template files.
+     *
      * @var Renderer
      */
     protected $renderer;
 
     /**
-     * @param Filesystem $filesystem
-     * @param Renderer $renderer
+     * Instantiate the class.
+     *
+     * @param Filesystem $filesystem Interacts with the filesystem.
+     * @param Renderer $renderer Renderer that handles layout of template files.
      */
     public function __construct(Filesystem $filesystem, Renderer $renderer)
     {
@@ -27,6 +35,16 @@ class SetUpGenerator
         $this->renderer = $renderer;
     }
 
+    /**
+     * Generate set_up method.
+     *
+     * @param string $path Path from the class we generate set_up function for.
+     * @param string $fullclass Fullname from the class.
+     *
+     * @return array
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     */
     public function generate_set_up(string $path, string $fullclass) {
 
         $usages = [];
@@ -110,16 +128,25 @@ class SetUpGenerator
         ];
     }
 
-    public function create_id(string $class ) {
-        $class = trim( $class, '\\' );
-        $class = str_replace( '\\', '.', $class );
-        return strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
-    }
-
+    /**
+     * Detect if a class is present in the content.
+     *
+     * @param string $name Name from the class.
+     * @param string $content Content to check in.
+     *
+     * @return bool
+     */
     protected function detect_class(string $name, string $content) {
-        return preg_match("/class[\n ]+$name/", $content);
+        return (bool) preg_match("/class[\n ]+$name/", $content);
     }
 
+    /**
+     * Fetch parameters from the constructor from the class.
+     *
+     * @param string $content content from the class.
+     *
+     * @return array<string,string|null>
+     */
     protected function fetch_parameters(string $content): array {
         if(! preg_match('/public[\n ]+function[\n ]+__construct\([\n ]*(?<parameters>[^\)]*)[\n ]*\)/',
             $content,
@@ -141,6 +168,14 @@ class SetUpGenerator
         return $ouput;
     }
 
+    /**
+     * Find the fullname from a class in the content.
+     *
+     * @param string $name Name from the class.
+     * @param string $content Content to search in.
+     *
+     * @return string
+     */
     protected function find_fullname(string $name, string $content) {
         if(! preg_match("/use[ \n]+(?<class>[^;]*$name);/", $content, $results) ) {
             return $name;
@@ -148,6 +183,14 @@ class SetUpGenerator
         return $results['class'];
     }
 
+    /**
+     * Add a setup method to the class.
+     *
+     * @param string $setup Setup method to add.
+     * @param string $content Content from the class.
+     *
+     * @return string
+     */
     public function add_setup_to_class(string $setup, string $content) {
         if(! preg_match('/(?<class>class[ \n]+\w+[ \n]+extends[ \n]+TestCase[ \n]+{)/', $content, $results)) {
             return $content;
@@ -156,6 +199,14 @@ class SetUpGenerator
         return str_replace($results['class'], $class, $content);
     }
 
+    /**
+     * Add import from classes used.
+     *
+     * @param string[] $usages classes used.
+     * @param string $content content from the file.
+     *
+     * @return string
+     */
     public function add_usage_to_class(array $usages, string $content) {
         $uses = array_reduce($usages, function ($result, $usage) {
             return $result . "use $usage;\n";
