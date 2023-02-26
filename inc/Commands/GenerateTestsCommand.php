@@ -2,6 +2,7 @@
 
 namespace RocketLauncherBuilder\Commands;
 
+use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\BootstrapManager;
@@ -29,6 +30,8 @@ class GenerateTestsCommand extends Command
 
     protected $content_generator;
 
+    protected $method;
+
     public function __construct(ClassGenerator $class_generator, Configurations $configurations, Filesystem $filesystem, SetUpGenerator $generator, FixtureGenerator $fixture_generator, ContentGenerator $content_generator, BootstrapManager $bootstrap_manager, ProjectManager $project_manager)
     {
         parent::__construct('test', 'Generate test classes');
@@ -43,19 +46,27 @@ class GenerateTestsCommand extends Command
         $this->content_generator = $content_generator;
 
         $this
-            ->argument('<method>', 'The method to test')
+            ->argument('[method]', 'The method to test')
             ->option('-t --type', 'Type from the test')
             ->option('-g --group', 'Group from the test')
             ->option('-e --expected', 'Force the test to have an expected param from the test')
             ->option('-s --scenarios', 'Add new scenarios for the test')
             ->option('-x --external', 'Add the integration tests as external run')
-           // ->option('-n --no-expected', 'Force the test to not have an expected param from the test')
             // Usage examples:
             ->usage(
-                '<bold>  test</end> <comment>MyNamespace/ClassName::method --type both</end> ## creates both tests<eol/>' .
-                '<bold>  test</end> <comment>MyNamespace/ClassName::method --type unit</end> ## creates unit test<eol/>' .
-                '<bold>  test</end> <comment>MyNamespace/ClassName::method --type integration</end> ## creates integration test<eol/>'
+                '<bold>$0  test</end> <comment>MyNamespace/ClassName::method --type both</end> ## creates both tests<eol/>' .
+                '<bold>$0  test</end> <comment>MyNamespace/ClassName::method --type unit</end> ## creates unit test<eol/>' .
+                '<bold>$0  test</end> <comment>MyNamespace/ClassName::method --type integration</end> ## creates integration test<eol/>'
             );
+    }
+
+    // This method is auto called before `self::execute()` and receives `Interactor $io` instance
+    public function interact(Interactor $io)
+    {
+        // Collect missing opts/args
+        if (!$this->method) {
+            $this->set('method', $io->prompt('Enter method to create tests for'));
+        }
     }
 
     // When app->handle() locates `init` command it automatically calls `execute()`
