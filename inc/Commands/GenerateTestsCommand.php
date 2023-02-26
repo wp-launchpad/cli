@@ -146,10 +146,10 @@ class GenerateTestsCommand extends Command
 
         $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
 
-        if($expected === 'present') {
+        if($expected === 'present' || $expected === 'p' ) {
             $has_return = true;
         }
-        if($expected === 'absent') {
+        if($expected === 'absent' || $expected === 'a' ) {
             $has_return = false;
         }
 
