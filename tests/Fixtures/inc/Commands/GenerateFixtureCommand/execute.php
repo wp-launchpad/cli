@@ -27,12 +27,15 @@ return [
         ]
     ],
     'test_data' => [
-        '' => [
+        'fixtureShouldCreateTheFileAndAddItToBootstrap' => [
             'config' => [
-
+                'class' => 'MyFixture',
+                'bootstrap_path' => '/tests/Unit/bootstrap.php'
             ],
             'expected' => [
-
+                'path' => '/tests/Fixtures/classes/MyFixture.php',
+                'content' => file_get_contents(__DIR__ . '/files/fixture.php'),
+                'boostrap_content' => file_get_contents(__DIR__ . '/files/bootstrap.php'),
             ]
         ]
     ]
