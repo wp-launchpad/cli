@@ -95,8 +95,8 @@ class GenerateFixtureCommand extends Command
 
         $bootstrap_content = $this->filesystem->read( $bootstrap );
         preg_match('/\$fixtures = \[(?<content>[^]]*)];/', $bootstrap_content, $content);
-        $content = $content['content'] . " '" . $relative_path . "',\n";
-        $bootstrap_content = preg_replace('/\$fixtures = \[(?<content>[^\]])*];/', "\$fixtures = [$content           ];", $bootstrap_content);
+        $content = $content['content'] . "    '" . $relative_path . "',\n";
+        $bootstrap_content = preg_replace('/\$fixtures = \[(?<content>[^\]])*];/', "\$fixtures = [$content    ];", $bootstrap_content);
 
         $this->filesystem->update( $bootstrap, $bootstrap_content );
     }
