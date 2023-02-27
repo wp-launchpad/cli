@@ -95,8 +95,8 @@ class GenerateServiceProvider extends Command
         $plugin_content = $this->filesystem->read($plugin_path);
 
          preg_match('/\$providers = \[(?<content>[^]]*)];/', $plugin_content, $content);
-        $content = $content['content'] . " " . $this->class_generator->get_fullname($name) . "::class,\n";
-        $plugin_content = preg_replace('/\$providers = \[(?<content>[^\]])*];/', "\$providers = [$content           ];", $plugin_content);
+        $content = $content['content'] . "    " . $this->class_generator->get_fullname($name) . "::class,\n";
+        $plugin_content = preg_replace('/\$providers = \[(?<content>[^\]])*];/', "\$providers = [$content        ];", $plugin_content);
 
         if(! $plugin_content) {
             return;

@@ -77,6 +77,7 @@ class Plugin
     private function get_service_providers() {
         $providers = [
             // Add new service providers here.
+            \PSR2Plugin\Engine\Test\MyProvider::class,
         ];
 
         return $providers;
