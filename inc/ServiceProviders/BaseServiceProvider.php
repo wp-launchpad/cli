@@ -55,21 +55,13 @@ class BaseServiceProvider implements ServiceProviderInterface
      * Instantiate the class.
      *
      * @param Configurations $configs configuration from the project.
-     * @param string $project_dir base directory from the project.
+     * @param Filesystem $filesystem Interacts with the filesystem.
      * @param string $app_dir base directory from the cli.
      */
-    public function __construct(Configurations $configs, string $project_dir, string $app_dir)
+    public function __construct(Configurations $configs, Filesystem $filesystem, string $app_dir)
     {
         $this->configs = $configs;
-        $this->project_dir = $project_dir;
-        // The internal adapter
-        $adapter = new Local(
-        // Determine root directory
-            $this->project_dir
-        );
-
-        // The FilesystemOperator
-        $this->filesystem = new Filesystem($adapter);
+        $this->filesystem = $filesystem;
 
         $adapter = new Local(
         // Determine root directory

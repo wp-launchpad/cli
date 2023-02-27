@@ -6,7 +6,10 @@ use RocketLauncherBuilder\Tests\Integration\TestCase;
 
 class Test_Execute extends TestCase
 {
-    public function shouldDoAsExpected($config, $expected) {
-
+    /**
+     * @dataProvider configTestData
+     */
+    public function testShouldDoAsExpected($config, $expected) {
+            $this->launch_app('fixture Test');
     }
 }

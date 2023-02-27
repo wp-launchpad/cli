@@ -8,10 +8,12 @@ return [
 
             ]
         ],
-        'composer.json' => '',
+        'composer.json' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php'),
         'tests' => [
             'Fixtures' => [
+                'classes' => [
 
+                ]
             ],
             'Integration' => [
 
@@ -20,7 +22,7 @@ return [
                 'inc' => [
 
                 ],
-                'bootstrap.php' => ''
+                'bootstrap.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/unit/bootstrap.php'),
             ]
         ]
     ],
