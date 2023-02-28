@@ -1,10 +1,10 @@
 <?php
 
-namespace {{ namespace }};
+namespace PSR2Plugin\Engine\Test\Database\Tables;
 
-use {{ base_namespace }}Dependencies\Database\Table;
+use PSR2Plugin\Dependencies\Database\Table;
 
-class {{ class_name }} extends Table {
+class MyTable extends Table {
 
     /**
      * Hook into queries, admin screens, and more!
@@ -37,7 +37,7 @@ class {{ class_name }} extends Table {
      *
      * @var int
      */
-    protected $version = {{ date }};
+    protected $version = 20230228;
 
     /**
      * Key => value array of versions => methods.

@@ -1,19 +1,19 @@
 <?php
 
-namespace {{ namespace }};
+namespace PSR2Plugin\Engine\Test\Database\Queries;
 
-use {{ base_namespace }}Dependencies\Database\Query;
-use {{ namespace_database }}\Rows\{{ class_name }} as Row;
-use {{ namespace_database }}\Schemas\{{ class_name }} as Schema;
+use PSR2Plugin\Dependencies\Database\Query;
+use PSR2Plugin\Database\Rows\MyTable as Row;
+use PSR2Plugin\Database\Schemas\MyTable as Schema;
 
-class {{ class_name }} extends Query {
+class MyTable extends Query {
 
     /**
      * Name of the database table to query.
      *
      * @var   string
      */
-    protected $table_name = '{{ table }}';
+    protected $table_name = 'my_table';
 
     /**
      * String used to alias the database table in MySQL statement.
@@ -24,7 +24,7 @@ class {{ class_name }} extends Query {
      *
      * @var   string
      */
-    protected $table_alias = '{{ alias }}';
+    protected $table_alias = 'my_table';
     /**
      * Name of class used to setup the database schema.
      *
@@ -43,7 +43,7 @@ class {{ class_name }} extends Query {
      *
      * @var   string
      */
-    protected $item_name = '{{ alias }}';
+    protected $item_name = 'my_table';
 
     /**
      * Plural version for a group of items.
@@ -54,7 +54,7 @@ class {{ class_name }} extends Query {
      *
      * @var string
      */
-    protected $item_name_plural = '{{ plural }}';
+    protected $item_name_plural = 'my_tables';
 
     /**
      * Name of class used to turn IDs into first-class objects.

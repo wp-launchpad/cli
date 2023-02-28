@@ -1,10 +1,10 @@
 <?php
 
-namespace {{ namespace }};
+namespace PSR2Plugin\Engine\Test\Database\Schemas;
 
-use {{ base_namespace }}Dependencies\Database\Schema;
+use PSR2Plugin\Dependencies\Database\Schema;
 
-class {{ class_name }} extends Schema {
+class MyTable extends Schema {
 
     /**
      * Array of database column objects

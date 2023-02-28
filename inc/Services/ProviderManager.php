@@ -96,16 +96,17 @@ class ProviderManager
         $content = $content['content'] . "$indents    '" . $id . "',\n";
         $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content$indents];", $provider_content);
 
-        preg_match( '/public function register\(\)[^ ]*(?<indents> *){(?<content>[^}]*)}/',
+        preg_match( '/\n(?<indents> *)public function register\(\)\s*{ *\n(?<content>[^}]*)}/',
             $provider_content,
             $content );
+
         $indents = $content['indents'];
         if(! trim($content['content'], " \n")) {
             $content['content'] = '';
         }
 
         $content = $content['content'] . "$indents    \$this->getContainer()->share('" . $id . "', $full_name::class);\n";
-        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
+        $provider_content = preg_replace( '/public function register\(\)[^}]*{ *\n(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
         $this->filesystem->update( $provider_path, $provider_content );
     }
@@ -164,25 +165,25 @@ class ProviderManager
     /**
      * Instantiate a class inside the service provider.
      *
-     * @param string $class Class to add to the service provider.
      * @param string $path Path from the service provider.
+     * @param string $class Class to add to the service provider.
      *
      * @return void
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function instantiate(string $class, string $path) {
-        $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider.php' );
+    public function instantiate(string $path, string $class) {
+        $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
 
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $this->class_generator->create_id( $full_name );
 
-        preg_match( '/public function register\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/', $provider_content, $content );
+        preg_match( '/\n(?<indents> *)public function register\(\)[^}]*\s*{(?<content>[^}]*)}/', $provider_content, $content );
 
         $indents = $content['indents'];
-        $content = $content['content'] . " \$this->getContainer()->get('" . $id . ");\n";
+        $content = $content['content'] . "$indents \$this->getContainer()->get('" . $id . "');\n";
 
-        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
+        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{"."$content$indents}", $provider_content );
 
         $this->filesystem->update( $provider_path, $provider_content );
     }

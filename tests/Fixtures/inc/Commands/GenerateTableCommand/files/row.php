@@ -1,13 +1,13 @@
 <?php
 
-namespace {{ namespace }};
+namespace PSR2Plugin\Engine\Test\Database\Rows;
 
-use {{ base_namespace }}Dependencies\Database\Row;
+use PSR2Plugin\Dependencies\Database\Row;
 
-class {{ class_name }} extends Row {
+class MyTable extends Row {
 
     /**
-     * {{ class_name }} constructor.
+     * MyTable constructor.
      *
      * @param object $item Current row details.
      */

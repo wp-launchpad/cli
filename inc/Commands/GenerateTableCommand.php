@@ -94,10 +94,10 @@ class GenerateTableCommand extends Command
         $class_name = ucfirst($class_name);
 
         $files = [
-            'database/query.php.tpl' => $folder . 'Database/Queries/' . $class_name,
-            'database/table.php.tpl' => $folder . 'Database/Tables/' . $class_name,
-            'database/row.php.tpl' => $folder . 'Database/Rows/' . $class_name,
-            'database/schema.php.tpl' => $folder . 'Database/Schemas/' . $class_name,
+            'database/query.php.tpl' => trim($folder, '/') . '/Database/Queries/' . $class_name,
+            'database/table.php.tpl' => trim($folder, '/') . '/Database/Tables/' . $class_name,
+            'database/row.php.tpl' => trim($folder, '/') . '/Database/Rows/' . $class_name,
+            'database/schema.php.tpl' => trim($folder, '/') . '/Database/Schemas/' . $class_name,
         ];
 
         foreach ($files as $template => $file) {
@@ -114,15 +114,17 @@ class GenerateTableCommand extends Command
                 return;
             }
 
-            $io->write("The subscriber is created at this path: $path", true);
+            $io->write("The class is created at this path: $path", true);
 
         }
 
-        $service_provider_name = $folder . 'Database/ServiceProvider';
-        $service_provider_path = $this->class_generator->generate_path( $service_provider_name );
+        $service_provider_name = trim($folder, '/') . '/Database';
+
+        $this->service_provider_manager->maybe_generate_service_provider($service_provider_name . DIRECTORY_SEPARATOR . 'ServiceProvider');
+
         foreach($files as $file) {
-            $this->service_provider_manager->add_class($service_provider_path, $file);
-            $this->service_provider_manager->instantiate($service_provider_path, $file);
+            $this->service_provider_manager->add_class($service_provider_name, $file);
+            $this->service_provider_manager->instantiate($service_provider_name, $file);
         }
     }
 }
