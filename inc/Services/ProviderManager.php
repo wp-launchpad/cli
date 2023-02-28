@@ -86,16 +86,25 @@ class ProviderManager
 
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $this->class_generator->create_id( $full_name );
-        preg_match('/\$provides = \[(?<content>[^]]*)];/', $provider_content, $content);
-        $content = $content['content'] . " '" . $id . "',\n";
-        $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content           ];", $provider_content);
+        if(! preg_match('/\n(?<indents>\s*)(protected\s)?\$provides = \[(?<content>[^]]*)];/', $provider_content, $content) ) {
+            return;
+        }
+        if(! trim($content['content'], " \n")) {
+            $content['content'] = "\n";
+        }
+        $indents = $content['indents'];
+        $content = $content['content'] . "$indents    '" . $id . "',\n";
+        $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content$indents];", $provider_content);
 
-        preg_match( '/public function register\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/',
+        preg_match( '/public function register\(\)[^ ]*(?<indents> *){(?<content>[^}]*)}/',
             $provider_content,
             $content );
         $indents = $content['indents'];
-        $content = $content['content'] . " \$this->getContainer()->share('" . $id . "', $full_name::class);\n";
+        if(! trim($content['content'], " \n")) {
+            $content['content'] = '';
+        }
 
+        $content = $content['content'] . "$indents    \$this->getContainer()->share('" . $id . "', $full_name::class);\n";
         $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
         $this->filesystem->update( $provider_path, $provider_content );
@@ -112,16 +121,16 @@ class ProviderManager
      * @throws \League\Flysystem\FileNotFoundException
      */
     public function register_subscriber(string $id, string $path, SubscriberType $type) {
-        $provider_path = $this->class_generator->generate_path($path. '/ServiceProvider.php');
+        $provider_path = $this->class_generator->generate_path($path. '/ServiceProvider');
         $provider_content = $this->filesystem->read( $provider_path );
 
-        if ( $type === SubscriberType::FRONT ) {
+        if ( $type->getValue() === SubscriberType::FRONT ) {
             $provider_content = $this->add_to_subscriber_method($id, 'get_front_subscribers', $provider_content);
         }
-        if ( $type === SubscriberType::ADMIN ) {
+        if ( $type->getValue() === SubscriberType::ADMIN ) {
             $provider_content = $this->add_to_subscriber_method($id, 'get_admin_subscribers', $provider_content);
         }
-        if ( $type === SubscriberType::COMMON ) {
+        if ( $type->getValue() === SubscriberType::COMMON ) {
             $provider_content = $this->add_to_subscriber_method($id, 'get_common_subscribers', $provider_content);
         }
 
@@ -139,13 +148,13 @@ class ProviderManager
      * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
      */
     protected function add_to_subscriber_method(string $id, string $method, string $content): string {
-        if ( ! preg_match('/public function ' . $method . '\(\)[^}]*(?<indents> *){(?<content>[^}]*)}/', $content, $results ) ) {
+        if ( ! preg_match('/\n(?<indents> *)public function ' . $method . '\(\)[^{]*{(?<content>[^}]*)}/', $content, $results ) ) {
             preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
             $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
                 'ids' => "'$id',"
             ]);
             $results = $results['content'] . $new_content;
-            return preg_replace('/(?<content>\$provides = \[[^]]*];)/', $results, $content);
+            return preg_replace('/(?<content>\$provides = \[[^]]*];) *\n/', $results, $content);
         }
         $indents = $results['indents'];
         $results = $results['content'] . " '" . $id . "',\n";

@@ -7,6 +7,6 @@
      */
     public function get_common_subscribers(): array {
         return [
-                {{ ids }}
-            ];
+            {{ ids }}
+        ];
     }

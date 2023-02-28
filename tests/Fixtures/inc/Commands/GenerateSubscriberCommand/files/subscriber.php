@@ -1,8 +1,8 @@
 <?php
-namespace {{ namespace }};
-use {{ base_namespace }}EventManagement\SubscriberInterface;
+namespace PSR2Plugin\Engine\Test;
+use PSR2Plugin\EventManagement\SubscriberInterface;
 
-class {{ class_name }} implements SubscriberInterface {
+class MySubscriber implements SubscriberInterface {
 
     /**
      * Returns an array of events that this subscriber wants to listen to.
