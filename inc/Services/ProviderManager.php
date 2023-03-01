@@ -86,12 +86,15 @@ class ProviderManager
 
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $this->class_generator->create_id( $full_name );
-        if(! preg_match('/\n(?<indents>\s*)(protected\s)?\$provides = \[(?<content>[^]]*)];/', $provider_content, $content) ) {
+        if(! preg_match('/\n(?<indents>\s*)(protected\s)?\$provides = \[(?<content>[^]]*[^ ]*) *];/', $provider_content, $content) ) {
             return;
         }
         if(! trim($content['content'], " \n")) {
             $content['content'] = "\n";
+        } else {
+            $content['content'] = rtrim($content['content'], " \n") . "\n";
         }
+
         $indents = $content['indents'];
         $content = $content['content'] . "$indents    '" . $id . "',\n";
         $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content$indents];", $provider_content);
@@ -103,6 +106,8 @@ class ProviderManager
         $indents = $content['indents'];
         if(! trim($content['content'], " \n")) {
             $content['content'] = '';
+        } else {
+            $content['content'] = rtrim($content['content'], " \n") . "\n";
         }
 
         $content = $content['content'] . "$indents    \$this->getContainer()->share('" . $id . "', $full_name::class);\n";
@@ -181,7 +186,7 @@ class ProviderManager
         preg_match( '/\n(?<indents> *)public function register\(\)[^}]*\s*{(?<content>[^}]*)}/', $provider_content, $content );
 
         $indents = $content['indents'];
-        $content = $content['content'] . "$indents \$this->getContainer()->get('" . $id . "');\n";
+        $content = $content['content'] . "$indents\$this->getContainer()->get('" . $id . "');\n";
 
         $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{"."$content$indents}", $provider_content );
 

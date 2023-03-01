@@ -7,7 +7,9 @@ return [
             'Plugin.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             'Engine' => [
                 'Test' => [
-                    'ServiceProvider.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/provider.php'),
+                    'Database' => [
+                        'ServiceProvider.php' => file_get_contents(__DIR__ . '/files/base_provider.php'),
+                    ]
                 ]
             ]
         ],

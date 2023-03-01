@@ -37,7 +37,7 @@ class MyTable extends Table {
      *
      * @var int
      */
-    protected $version = 20230228;
+    protected $version = {{ date }};
 
     /**
      * Key => value array of versions => methods.
