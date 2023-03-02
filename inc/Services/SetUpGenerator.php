@@ -91,10 +91,6 @@ class SetUpGenerator
 
         $usages[]= trim(str_replace('/', '\\', $fullclass) ,'\\');
 
-        if(count($parameters) > 0) {
-            $usages []= 'Mockery';
-        }
-
         foreach ($parameters as $key => $type) {
             $key_without_dollar = str_replace('$', '', $key);
             $init_params .= "\$this->$key_without_dollar, ";
@@ -145,6 +141,10 @@ class SetUpGenerator
         $usages = array_map(function ($usage) use ($path) {
             return $this->find_fullname_class($path, $usage);
         }, $usages);
+
+        if(count($usages) > 1 || $has_abstract_class || $has_main_trait) {
+            array_unshift($usages, 'Mockery');
+        }
 
         return [
             'setup' => $setup,

@@ -1451,5 +1451,79 @@ return [
                 ]
             ]
         ],
+        'onNoNeedToMockDontImportMockery' => [
+            'config' => [
+                'class' => 'PSR2Plugin/Test/MyClass',
+                'parameters' => '',
+                'my_class_content' => file_get_contents(__DIR__ . '/files/my_class_without_params.php'),
+                'my_class_path' => 'inc/Test/MyClass.php',
+                'methods' => [
+                    'tests/Fixtures/inc/Test/MyClass/myMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Unit/inc/Test/MyClass/myMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Integration/inc/Test/MyClass/myMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Fixtures/inc/Test/MyClass/myProtectedMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Unit/inc/Test/MyClass/myProtectedMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Integration/inc/Test/MyClass/myProtectedMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Fixtures/inc/Test/MyClass/mySecondMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Unit/inc/Test/MyClass/mySecondMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Integration/inc/Test/MyClass/mySecondMethod.php' => [
+                        'exists' => false,
+                    ],
+                ]
+            ],
+            'expected' => [
+                'methods' => [
+                    'tests/Fixtures/inc/Test/MyClass/myMethod.php' => [
+                        'exists' => true,
+                        'content' => file_get_contents(__DIR__ . '/files/fixtures/default.php')
+                    ],
+                    'tests/Unit/inc/Test/MyClass/myMethod.php' => [
+                        'exists' => true,
+                        'content' => file_get_contents(__DIR__ . '/files/unit/default_without_mockery.php')
+                    ],
+                    'tests/Integration/inc/Test/MyClass/myMethod.php' => [
+                        'exists' => true,
+                        'content' => file_get_contents(__DIR__ . '/files/integration/default.php')
+                    ],
+                    'tests/Fixtures/inc/Test/MyClass/myProtectedMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Unit/inc/Test/MyClass/myProtectedMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Integration/inc/Test/MyClass/myProtectedMethod.php' => [
+                        'exists' => false,
+                    ],
+                    'tests/Fixtures/inc/Test/MyClass/mySecondMethod.php' => [
+                        'exists' => true,
+                        'content' => file_get_contents(__DIR__ . '/files/fixtures/second_method.php')
+                    ],
+                    'tests/Unit/inc/Test/MyClass/mySecondMethod.php' => [
+                        'exists' => true,
+                        'content' => file_get_contents(__DIR__ . '/files/unit/second_method_without_mockery.php')
+                    ],
+                    'tests/Integration/inc/Test/MyClass/mySecondMethod.php' => [
+                        'exists' => true,
+                        'content' => file_get_contents(__DIR__ . '/files/integration/second_method.php')
+                    ],
+                ]
+            ]
+        ],
     ]
 ];
