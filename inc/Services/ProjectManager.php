@@ -60,7 +60,7 @@ class ProjectManager
 
         $json['scripts'] = $scripts;
 
-        $content = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+        $content = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) . "\n";
         $this->filesystem->update(self::COMPOSER_FILE, $content);
 
         return true;

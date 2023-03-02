@@ -778,7 +778,7 @@ return [
         'onClassWithExpectedPresentShortParamShouldAddExpected' => [
             'config' => [
                 'class' => 'PSR2Plugin/Test/MyClass',
-                'parameters' => ' -x p',
+                'parameters' => ' -e p',
                 'methods' => [
                     'tests/Fixtures/inc/Test/MyClass/myMethod.php' => [
                         'exists' => false,

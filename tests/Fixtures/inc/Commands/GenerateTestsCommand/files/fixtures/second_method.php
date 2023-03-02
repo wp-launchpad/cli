@@ -2,7 +2,7 @@
 return [
     '' => [
         'config' => [
-            'param' => [],
+              'param' => [],
 
         ],
     ],
