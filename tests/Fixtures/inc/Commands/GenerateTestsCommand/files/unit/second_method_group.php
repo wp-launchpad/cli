@@ -2,8 +2,8 @@
 
 namespace PSR2Plugin\Tests\Unit\inc\Test\MyClass;
 
-use PSR2Plugin\Test\MyClass;
 use Mockery;
+use PSR2Plugin\Test\MyClass;
 use Brain\Monkey\Name\Exception\InvalidName;
 
 
