@@ -132,6 +132,10 @@ class SetUpGenerator
         $usages = array_unique($usages);
         $usages = array_filter($usages);
 
+        $usages = array_filter($usages, function ($usage) {
+            return ! $this->is_base_type($usage);
+        });
+
         $usages = array_map(function ($usage) use ($path) {
             return $this->find_fullname_class($path, $usage);
         }, $usages);
@@ -254,5 +258,16 @@ class SetUpGenerator
         $potential_path = preg_replace("#^$base_code_folder#", $base_namespace, $potential_path);
         $potential_path = str_replace('.php', '', $potential_path);
         return str_replace(DIRECTORY_SEPARATOR, '\\', $potential_path);
+    }
+
+    /**
+     * Detect if the type is a base one.
+     *
+     * @param string $type Type to check.
+     *
+     * @return bool
+     */
+    protected function is_base_type(string $type) {
+        return in_array($type, ['string', 'int', 'float', 'bool', 'array', 'boolean', 'integer', 'object']);
     }
 }
