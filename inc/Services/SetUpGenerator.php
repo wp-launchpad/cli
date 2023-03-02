@@ -71,8 +71,12 @@ class SetUpGenerator
         $name = str_replace('.php', '', basename($path) );
 
         $has_main_class = $this->detect_class($name, $content);
+        $has_abstract_class = $this->detect_abstract_class($name, $content);
+
+        $has_main_trait = $this->detect_trait($name, $content);
+
         $key_main_class = $this->create_id($name);
-        if(! $has_main_class) {
+        if(! $has_main_class && ! $has_main_trait) {
             return [
                 'setup' => '',
                 'usages' => $usages
@@ -125,6 +129,8 @@ class SetUpGenerator
             'main_class_name' => $key_main_class,
             'main_class_type' => $name,
             'properties' => $properties,
+            'is_trait' => $has_main_trait,
+            'is_abstract' => $has_abstract_class,
             'properties_initialisation' => $properties_initialisation,
             'init_params' => trim($init_params, ', '),
         ]);
@@ -202,6 +208,7 @@ class SetUpGenerator
             return $content;
         }
         $class = $results['class'] . "\n" . $setup;
+        $class = rtrim($class, " \n");
         return str_replace($results['class'], $class, $content);
     }
 
