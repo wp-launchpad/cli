@@ -1,7 +1,7 @@
 {{ properties }}
     /**
-    * @var {{ main_class_type }}
-    */
+     * @var {{ main_class_type }}
+     */
     protected ${{ main_class_name }};
 
     public function set_up() {

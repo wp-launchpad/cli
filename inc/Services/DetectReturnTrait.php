@@ -24,7 +24,7 @@ trait DetectReturnTrait
 
         $content = $results['content'];
 
-        if(key_exists('return', $results) && strpos($results['return'], 'void') === false) {
+        if(key_exists('return', $results) && $results['return'] && strpos($results['return'], 'void') === false) {
             return true;
         }
 

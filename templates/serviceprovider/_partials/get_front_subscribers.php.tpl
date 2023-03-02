@@ -7,6 +7,6 @@
      */
     public function get_front_subscribers(): array {
         return [
-                {{ ids }}
-            ];
+            {{ ids }}
+        ];
     }
