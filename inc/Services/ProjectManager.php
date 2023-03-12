@@ -66,6 +66,17 @@ class ProjectManager
         return true;
     }
 
+    public function is_resolver_present() {
+        if( ! $this->filesystem->has(self::COMPOSER_FILE)) {
+            return false;
+        }
+
+        $content = $this->filesystem->read(self::COMPOSER_FILE);
+        $json = json_decode($content,true);
+
+        return $json && key_exists('extra', $json) && key_exists('mozart', $json['extra']) && key_exists('packages', $json['extra']['mozart']) && in_array('crochetfeve0251/rocket-launcher-autoresolver', $json['extra']['mozart']['packages']);
+    }
+
     /**
      * Create an ID from the class.
      *
@@ -78,4 +89,5 @@ class ProjectManager
         $class = str_replace( '\\', '.', $class );
         return 'test-integration-' . strtolower( preg_replace( ['/([a-z])\d([A-Z])/', '/[^_]([A-Z][a-z])]/'], '$1_$2', $class ) );
     }
+
 }

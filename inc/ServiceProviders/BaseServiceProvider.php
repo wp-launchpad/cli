@@ -83,8 +83,10 @@ class BaseServiceProvider implements ServiceProviderInterface
      */
     public function attach_commands(App $app): App
     {
+        $project_manager = new ProjectManager($this->filesystem);
+
         $class_generator = new ClassGenerator($this->filesystem, $this->renderer, $this->configs);
-        $provider_manager = new ProviderManager($app, $this->filesystem, $class_generator, $this->renderer);
+        $provider_manager = new ProviderManager($app, $this->filesystem, $class_generator, $this->renderer, $project_manager);
 
         $setup_generator = new SetUpGenerator($this->filesystem, $this->renderer, $this->configs);
 
@@ -92,12 +94,10 @@ class BaseServiceProvider implements ServiceProviderInterface
 
         $content_generator = new ContentGenerator($this->filesystem, $this->renderer);
 
-        $project_manager = new ProjectManager($this->filesystem);
-
         $bootstrap_manager = new BootstrapManager($this->filesystem, $this->configs, $this->renderer);
 
         $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager));
-        $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs));
+        $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs, $project_manager));
         $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
         $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator, $fixture_generator, $content_generator, $bootstrap_manager, $project_manager));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));

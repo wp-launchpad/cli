@@ -37,6 +37,11 @@ class ProviderManager
     protected $renderer;
 
     /**
+     * @var ProjectManager
+     */
+    protected $project_manager;
+
+    /**
      * Instantiate the class.
      *
      * @param App $app CLI.
@@ -44,12 +49,13 @@ class ProviderManager
      * @param ClassGenerator $class_generator Class generator.
      * @param Renderer $renderer Renderer that handles layout of template files.
      */
-    public function __construct(App $app, Filesystem $filesystem, ClassGenerator $class_generator, Renderer $renderer)
+    public function __construct(App $app, Filesystem $filesystem, ClassGenerator $class_generator, Renderer $renderer, ProjectManager $project_manager)
     {
         $this->app = $app;
         $this->filesystem = $filesystem;
         $this->class_generator = $class_generator;
         $this->renderer = $renderer;
+        $this->project_manager = $project_manager;
     }
 
     /**
@@ -81,6 +87,9 @@ class ProviderManager
      * @throws \League\Flysystem\FileNotFoundException
      */
     public function add_class(string $path, string $class) {
+        if( $this->project_manager->is_resolver_present() ) {
+            return;
+        }
         $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
 

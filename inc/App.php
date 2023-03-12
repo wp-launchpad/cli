@@ -3,6 +3,7 @@
 namespace RocketLauncherBuilder;
 
 use Ahc\Cli\Application;
+use Ahc\Cli\Helper\Shell;
 
 class App extends Application
 {
@@ -34,5 +35,19 @@ class App extends Application
         $command_instance->parse($params);
 
         $this->doAction($command_instance);
+    }
+
+    /**
+     * Launch a shell command.
+     *
+     * @param string $command command to launch.
+     * @param string|null $directory directory to exec
+     * @param array $env
+     * @param float $timeout
+     * @return Shell
+     */
+    public function launchShell(string $command, string $directory = null, array $env = [], float $timeout = 10.5) {
+        $shell = new Shell($command);
+        return $shell->setOptions($directory, $env, $timeout)->execute();
     }
 }
