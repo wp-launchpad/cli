@@ -20,10 +20,10 @@ class ServiceProvider extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'psr2plugin.engine.test.database.queries.mytable',
-        'psr2plugin.engine.test.database.tables.mytable',
-        'psr2plugin.engine.test.database.rows.mytable',
-        'psr2plugin.engine.test.database.schemas.mytable',
+        \PSR2Plugin\Engine\Test\Database\Queries\MyTable::class,
+        \PSR2Plugin\Engine\Test\Database\Tables\MyTable::class,
+        \PSR2Plugin\Engine\Test\Database\Rows\MyTable::class,
+        \PSR2Plugin\Engine\Test\Database\Schemas\MyTable::class,
     ];
 
     /**
@@ -33,13 +33,13 @@ class ServiceProvider extends AbstractServiceProvider
      */
     public function register()
     {
-        $this->getContainer()->share('psr2plugin.engine.test.database.queries.mytable', \PSR2Plugin\Engine\Test\Database\Queries\MyTable::class);
-        $this->getContainer()->get('psr2plugin.engine.test.database.queries.mytable');
-        $this->getContainer()->share('psr2plugin.engine.test.database.tables.mytable', \PSR2Plugin\Engine\Test\Database\Tables\MyTable::class);
-        $this->getContainer()->get('psr2plugin.engine.test.database.tables.mytable');
-        $this->getContainer()->share('psr2plugin.engine.test.database.rows.mytable', \PSR2Plugin\Engine\Test\Database\Rows\MyTable::class);
-        $this->getContainer()->get('psr2plugin.engine.test.database.rows.mytable');
-        $this->getContainer()->share('psr2plugin.engine.test.database.schemas.mytable', \PSR2Plugin\Engine\Test\Database\Schemas\MyTable::class);
-        $this->getContainer()->get('psr2plugin.engine.test.database.schemas.mytable');
+        $this->getContainer()->share(\PSR2Plugin\Engine\Test\Database\Queries\MyTable::class, \PSR2Plugin\Engine\Test\Database\Queries\MyTable::class);
+        $this->getContainer()->get(\PSR2Plugin\Engine\Test\Database\Queries\MyTable::class);
+        $this->getContainer()->share(\PSR2Plugin\Engine\Test\Database\Tables\MyTable::class, \PSR2Plugin\Engine\Test\Database\Tables\MyTable::class);
+        $this->getContainer()->get(\PSR2Plugin\Engine\Test\Database\Tables\MyTable::class);
+        $this->getContainer()->share(\PSR2Plugin\Engine\Test\Database\Rows\MyTable::class, \PSR2Plugin\Engine\Test\Database\Rows\MyTable::class);
+        $this->getContainer()->get(\PSR2Plugin\Engine\Test\Database\Rows\MyTable::class);
+        $this->getContainer()->share(\PSR2Plugin\Engine\Test\Database\Schemas\MyTable::class, \PSR2Plugin\Engine\Test\Database\Schemas\MyTable::class);
+        $this->getContainer()->get(\PSR2Plugin\Engine\Test\Database\Schemas\MyTable::class);
     }
 }

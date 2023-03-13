@@ -94,7 +94,7 @@ class ProviderManager
         $provider_content = $this->filesystem->read( $provider_path );
 
         $full_name = $this->class_generator->get_fullname( $class );
-        $id = $this->class_generator->create_id( $full_name );
+        $id = $this->class_generator->get_fullname( $full_name ) . '::class';
         if(! preg_match('/\n(?<indents>\s*)(protected\s)?\$provides = \[(?<content>[^]]*[^ ]*) *];/', $provider_content, $content) ) {
             return;
         }
@@ -105,7 +105,7 @@ class ProviderManager
         }
 
         $indents = $content['indents'];
-        $content = $content['content'] . "$indents    '" . $id . "',\n";
+        $content = $content['content'] . "$indents    " . $id . ",\n";
         $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content$indents];", $provider_content);
 
         preg_match( '/\n(?<indents> *)public function register\(\)\s*{ *\n(?<content>[^}]*)}/',
@@ -119,7 +119,7 @@ class ProviderManager
             $content['content'] = rtrim($content['content'], " \n") . "\n";
         }
 
-        $content = $content['content'] . "$indents    \$this->getContainer()->share('" . $id . "', $full_name::class);\n";
+        $content = $content['content'] . "$indents    \$this->getContainer()->share(" . $id . ", $full_name::class);\n";
         $provider_content = preg_replace( '/public function register\(\)[^}]*{ *\n(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
 
         $this->filesystem->update( $provider_path, $provider_content );
@@ -164,16 +164,34 @@ class ProviderManager
      */
     protected function add_to_subscriber_method(string $id, string $method, string $content): string {
         if ( ! preg_match('/\n(?<indents> *)public function ' . $method . '\(\)[^{]*{(?<content>[^}]*)}/', $content, $results ) ) {
-            preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
-            $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
-                'ids' => "'$id',"
-            ]);
-            $results = $results['content'] . $new_content;
-            return preg_replace('/(?<content>\$provides = \[[^]]*];) *\n/', $results, $content);
+           if($this->is_autoresolver($content)) {
+               return $this->add_method_autoresolve($content, $method, $id);
+           }
+           return $this->add_method_vanilla($content, $method, $id);
         }
         $indents = $results['indents'];
-        $results = $results['content'] . " '" . $id . "',\n";
+        $results = $results['content'] . " " . $id . ",\n";
         return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n$indents{\n$results$indents}", $content);
+    }
+
+    protected function add_method_autoresolve(string $content, string $method, string $id) {
+        if(! preg_match('/class(?<content>\s*[^{]*{\h*\n)/', $content, $results)) {
+            return $content;
+        }
+        $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
+            'ids' => "$id,"
+        ]);
+        $results = $results['content'] . $new_content;
+        return preg_replace('/class(?<content>\s*[^{]*{\h*\n)/', $results, $content);
+    }
+
+    protected function add_method_vanilla(string $content, string $method, string $id){
+        preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
+        $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
+            'ids' => "$id,"
+        ]);
+        $results = $results['content'] . $new_content;
+        return preg_replace('/(?<content>\$provides = \[[^]]*];) *\n/', $results, $content);
     }
 
     /**
@@ -190,15 +208,20 @@ class ProviderManager
         $provider_content = $this->filesystem->read( $provider_path );
 
         $full_name = $this->class_generator->get_fullname( $class );
-        $id = $this->class_generator->create_id( $full_name );
+        $id = $full_name . '::class';
 
         preg_match( '/\n(?<indents> *)public function register\(\)[^}]*\s*{(?<content>[^}]*)}/', $provider_content, $content );
 
         $indents = $content['indents'];
-        $content = $content['content'] . "$indents\$this->getContainer()->get('" . $id . "');\n";
+        $content = $content['content'] . "$indents\$this->getContainer()->get(" . $id . ");\n";
 
         $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{"."$content$indents}", $provider_content );
 
         $this->filesystem->update( $provider_path, $provider_content );
+    }
+
+
+    public function is_autoresolver(string $content) {
+        return (bool) preg_match('/Dependencies\\\\RocketLauncherAutoresolver\\\\ServiceProvider/', $content);
     }
 }

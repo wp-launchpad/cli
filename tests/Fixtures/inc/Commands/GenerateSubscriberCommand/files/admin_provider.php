@@ -20,7 +20,7 @@ class ServiceProvider extends AbstractServiceProvider
      * @var array
      */
     protected $provides = [
-        'psr2plugin.engine.test.mysubscriber',
+        \PSR2Plugin\Engine\Test\MySubscriber::class,
     ];
 
     /**
@@ -30,7 +30,7 @@ class ServiceProvider extends AbstractServiceProvider
      */
     public function get_admin_subscribers(): array {
         return [
-            'psr2plugin.engine.test.mysubscriber',
+            \PSR2Plugin\Engine\Test\MySubscriber::class,
         ];
     }
 
@@ -41,6 +41,6 @@ class ServiceProvider extends AbstractServiceProvider
      */
     public function register()
     {
-        $this->getContainer()->share('psr2plugin.engine.test.mysubscriber', \PSR2Plugin\Engine\Test\MySubscriber::class);
+        $this->getContainer()->share(\PSR2Plugin\Engine\Test\MySubscriber::class, \PSR2Plugin\Engine\Test\MySubscriber::class);
     }
 }

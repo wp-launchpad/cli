@@ -99,7 +99,7 @@ class GenerateSubscriberCommand extends Command
         $io->write("The subscriber is created at this path: $path", true);
 
         $service_provider_name = $this->class_generator->get_dirname( $name );
-        $id_subscriber = $this->class_generator->create_id( $this->class_generator->get_fullname($name) );
+        $id_subscriber = $this->class_generator->get_fullname($name) . '::class';
 
         $this->service_provider_manager->maybe_generate_service_provider($name);
 
@@ -118,4 +118,5 @@ class GenerateSubscriberCommand extends Command
         }
 
     }
+
 }
