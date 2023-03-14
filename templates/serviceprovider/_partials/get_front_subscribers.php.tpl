@@ -1,5 +1,4 @@
 
-
     /**
      * Return IDs from front subscribers.
      *
@@ -10,3 +9,4 @@
             {{ ids }}
         ];
     }
+

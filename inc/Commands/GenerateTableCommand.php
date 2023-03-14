@@ -122,9 +122,12 @@ class GenerateTableCommand extends Command
 
         $this->service_provider_manager->maybe_generate_service_provider($service_provider_name . DIRECTORY_SEPARATOR . 'ServiceProvider');
 
-        foreach($files as $file) {
+        foreach($files as $template => $file) {
+            if($template === 'database/table.php.tpl') {
+                $this->service_provider_manager->instantiate($service_provider_name, $file);
+                continue;
+            }
             $this->service_provider_manager->add_class($service_provider_name, $file);
-            $this->service_provider_manager->instantiate($service_provider_name, $file);
         }
     }
 }

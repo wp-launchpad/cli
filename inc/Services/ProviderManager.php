@@ -42,6 +42,11 @@ class ProviderManager
     protected $project_manager;
 
     /**
+     * @var string[]
+     */
+    protected $functions_mapping = [];
+
+    /**
      * Instantiate the class.
      *
      * @param App $app CLI.
@@ -92,23 +97,11 @@ class ProviderManager
         }
         $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
-
+        $provider_content = $this->remove_anonymous_functions($provider_content);
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $this->class_generator->get_fullname( $full_name ) . '::class';
-        if(! preg_match('/\n(?<indents>\s*)(protected\s)?\$provides = \[(?<content>[^]]*[^ ]*) *];/', $provider_content, $content) ) {
-            return;
-        }
-        if(! trim($content['content'], " \n")) {
-            $content['content'] = "\n";
-        } else {
-            $content['content'] = rtrim($content['content'], " \n") . "\n";
-        }
 
-        $indents = $content['indents'];
-        $content = $content['content'] . "$indents    " . $id . ",\n";
-        $provider_content = preg_replace('/\$provides = \[(?<content>[^\]])*];/', "\$provides = [$content$indents];", $provider_content);
-
-        preg_match( '/\n(?<indents> *)public function register\(\)\s*{ *\n(?<content>[^}]*)}/',
+        preg_match( '/\n(?<indents> *)public function define\(\)\s*{ *\n(?<content>[^}]*)}/',
             $provider_content,
             $content );
 
@@ -119,8 +112,9 @@ class ProviderManager
             $content['content'] = rtrim($content['content'], " \n") . "\n";
         }
 
-        $content = $content['content'] . "$indents    \$this->getContainer()->share(" . $id . ", $full_name::class);\n";
-        $provider_content = preg_replace( '/public function register\(\)[^}]*{ *\n(?<content>[^}]*)}/', "public function register()\n$indents{\n$content$indents}", $provider_content );
+        $content = $content['content'] . "$indents    \$this->register_service(" . $id . ");\n";
+        $provider_content = preg_replace( '/public function define\(\)[^}]*{ *\n(?<content>[^}]*)}/', "public function define()\n$indents{\n$content$indents}", $provider_content );
+        $provider_content = $this->reset_anonymous_functions($provider_content);
 
         $this->filesystem->update( $provider_path, $provider_content );
     }
@@ -164,10 +158,7 @@ class ProviderManager
      */
     protected function add_to_subscriber_method(string $id, string $method, string $content): string {
         if ( ! preg_match('/\n(?<indents> *)public function ' . $method . '\(\)[^{]*{(?<content>[^}]*)}/', $content, $results ) ) {
-           if($this->is_autoresolver($content)) {
-               return $this->add_method_autoresolve($content, $method, $id);
-           }
-           return $this->add_method_vanilla($content, $method, $id);
+            return $this->add_method_autoresolve($content, $method, $id);
         }
         $indents = $results['indents'];
         $results = $results['content'] . " " . $id . ",\n";
@@ -181,17 +172,8 @@ class ProviderManager
         $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
             'ids' => "$id,"
         ]);
-        $results = $results['content'] . $new_content;
+        $results = 'class' . $results['content'] . $new_content;
         return preg_replace('/class(?<content>\s*[^{]*{\h*\n)/', $results, $content);
-    }
-
-    protected function add_method_vanilla(string $content, string $method, string $id){
-        preg_match('/(?<content>\$provides = \[[^]]*];)/', $content, $results);
-        $new_content = $this->renderer->apply_template('serviceprovider/_partials/' . $method . '.php.tpl', [
-            'ids' => "$id,"
-        ]);
-        $results = $results['content'] . $new_content;
-        return preg_replace('/(?<content>\$provides = \[[^]]*];) *\n/', $results, $content);
     }
 
     /**
@@ -206,20 +188,42 @@ class ProviderManager
     public function instantiate(string $path, string $class) {
         $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
-
+        $provider_content = $this->remove_anonymous_functions($provider_content);
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $full_name . '::class';
 
-        preg_match( '/\n(?<indents> *)public function register\(\)[^}]*\s*{(?<content>[^}]*)}/', $provider_content, $content );
+        preg_match( '/\n(?<indents> *)public function define\(\)[^}]*\s*{(?<content>[^}]*)}/', $provider_content, $content );
 
         $indents = $content['indents'];
-        $content = $content['content'] . "$indents\$this->getContainer()->get(" . $id . ");\n";
+        $content = $content['content'] . "$indents\$this->register_service(" . $id . ", function () {\n$indents        \$this->getContainer()->get($id);\n$indents    });\n";
 
-        $provider_content = preg_replace( '/public function register\(\)[^}]*{(?<content>[^}]*)}/', "public function register()\n$indents{"."$content$indents}", $provider_content );
+        $provider_content = preg_replace( '/public function define\(\)[^}]*{(?<content>[^}]*)}/', "public function define()\n$indents{"."$content$indents}", $provider_content );
+
+        $provider_content = $this->reset_anonymous_functions($provider_content);
 
         $this->filesystem->update( $provider_path, $provider_content );
     }
 
+    protected function remove_anonymous_functions(string $content) {
+        if(! preg_match_all('/(?<function>function\s*\([^)]*\)\s*\{[^}]*})/', $content, $results)) {
+            return $content;
+        }
+        foreach ($results['function'] as $function) {
+            $id = '#function_' . uniqid() . '#';
+            $this->functions_mapping[$id] = $function;
+            $content = str_replace($function, $id, $content);
+        }
+
+        return $content;
+    }
+
+    protected function reset_anonymous_functions(string $content) {
+        foreach ($this->functions_mapping as $id => $function) {
+            $content = str_replace($id, $function, $content);
+        }
+
+        return $content;
+    }
 
     public function is_autoresolver(string $content) {
         return (bool) preg_match('/Dependencies\\\\RocketLauncherAutoresolver\\\\ServiceProvider/', $content);

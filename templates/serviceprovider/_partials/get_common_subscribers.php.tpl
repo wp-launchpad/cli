@@ -1,5 +1,4 @@
 
-
     /**
      * Return IDs from common subscribers.
      *
@@ -10,3 +9,4 @@
             {{ ids }}
         ];
     }
+
