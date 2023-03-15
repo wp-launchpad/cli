@@ -70,15 +70,23 @@ class ProviderManager
      *
      * @return void
      */
-    public function maybe_generate_service_provider(string $namespace ) {
+    public function maybe_generate_service_provider(string $namespace, string $type = '' ) {
         $service_provider_path = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider.php';
         $service_provider_name = $this->class_generator->get_dirname( $namespace ) . '/ServiceProvider';
 
         if( ! $this->class_generator->exists( $service_provider_path ) ) {
-            $this->app->launchCommand(GenerateServiceProvider::class, [
+
+            $params = [
                 false,
                 $service_provider_name
-            ]);
+            ];
+
+            if($type) {
+                $params[] = '-t';
+                $params[] = $type;
+            }
+
+            $this->app->launchCommand(GenerateServiceProvider::class, $params);
         }
     }
 

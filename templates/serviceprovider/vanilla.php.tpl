@@ -9,6 +9,7 @@ use {{ base_namespace }}AbstractServiceProvider;
  */
 class {{ class_name }} extends AbstractServiceProvider
 {
+
     /**
      * Registers items with the container
      *

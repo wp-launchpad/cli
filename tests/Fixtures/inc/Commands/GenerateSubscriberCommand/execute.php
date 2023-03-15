@@ -74,6 +74,40 @@ return [
                 'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
+        'subscriberResolverShouldBeAdded' => [
+            'config' => [
+                'class' => 'PSR2Plugin/Engine/Test/MySubscriber',
+                'plugin_path' => '/inc/Plugin.php',
+                'provider_path' => '/inc/Engine/Test/ServiceProvider.php',
+                'composer_path' => 'composer.json',
+                'composer_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer_autoresolver.json'),
+                'provider_exists' => false,
+                'parameters' => ' --provider autoresolver',
+            ],
+            'expected' => [
+                'path' => '/inc/Engine/Test/MySubscriber.php',
+                'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
+                'provider_content' => file_get_contents(__DIR__ . '/files/autoresolver.php'),
+                'plugin_content' => file_get_contents(__DIR__ . '/files/plugin.php'),
+            ]
+        ],
+        'subscriberShortResolverShouldBeAdded' => [
+            'config' => [
+                'class' => 'PSR2Plugin/Engine/Test/MySubscriber',
+                'plugin_path' => '/inc/Plugin.php',
+                'provider_path' => '/inc/Engine/Test/ServiceProvider.php',
+                'composer_path' => 'composer.json',
+                'composer_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer_autoresolver.json'),
+                'provider_exists' => false,
+                'parameters' => ' -p a',
+            ],
+            'expected' => [
+                'path' => '/inc/Engine/Test/MySubscriber.php',
+                'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
+                'provider_content' => file_get_contents(__DIR__ . '/files/autoresolver.php'),
+                'plugin_content' => file_get_contents(__DIR__ . '/files/plugin.php'),
+            ]
+        ],
         'subscriberCommonShortParamShouldBeAddedAsCommon' => [
             'config' => [
                 'class' => 'PSR2Plugin/Engine/Test/MySubscriber',

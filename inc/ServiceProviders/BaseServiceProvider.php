@@ -96,9 +96,9 @@ class BaseServiceProvider implements ServiceProviderInterface
 
         $bootstrap_manager = new BootstrapManager($this->filesystem, $this->configs, $this->renderer);
 
-        $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager));
+        $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager, $project_manager));
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs, $project_manager));
-        $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager));
+        $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager, $project_manager));
         $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator, $fixture_generator, $content_generator, $bootstrap_manager, $project_manager));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
 

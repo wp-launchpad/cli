@@ -6,6 +6,7 @@ use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
 use RocketLauncherBuilder\ObjectValues\SubscriberType;
 use RocketLauncherBuilder\Services\ClassGenerator;
+use RocketLauncherBuilder\Services\ProjectManager;
 use RocketLauncherBuilder\Services\ProviderManager;
 use RocketLauncherBuilder\Templating\Renderer;
 
@@ -36,19 +37,25 @@ class GenerateSubscriberCommand extends Command
     protected $service_provider_manager;
 
     /**
+     * @var ProjectManager
+     */
+    protected $project_manager;
+
+    /**
      * Instantiate the class.
      *
      * @param ClassGenerator $class_generator Class generator.
      * @param Filesystem $filesystem Interacts with the filesystem.
      * @param ProviderManager $service_provider_manager Handle operations with service providers.
      */
-    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, ProviderManager $service_provider_manager)
+    public function __construct(ClassGenerator $class_generator, Filesystem $filesystem, ProviderManager $service_provider_manager, ProjectManager $project_manager)
     {
         parent::__construct('subscriber', 'Generate subscriber class');
 
         $this->class_generator = $class_generator;
         $this->filesystem = $filesystem;
         $this->service_provider_manager = $service_provider_manager;
+        $this->project_manager = $project_manager;
 
         $this
             ->argument('[name]', 'Full name from the subscriber')
@@ -62,6 +69,10 @@ class GenerateSubscriberCommand extends Command
                 '<bold>  $0 subscriber</end> <comment>MyClass --type admin</end> ## Creates a admin subscriber<eol/>' .
                 '<bold>  $0 subscriber</end> <comment>MyClass --type front</end> ## Creates a front subscriber<eol/>'
             );
+
+        if($this->project_manager->is_resolver_present()) {
+            $this->option('-p --provider', 'Type from the provider');
+        }
     }
 
     /**
@@ -85,7 +96,7 @@ class GenerateSubscriberCommand extends Command
      * @param string|null $type
      * @return void
      */
-    public function execute($name, $type)
+    public function execute($name, $type, $provider)
     {
         $io = $this->app()->io();
 
@@ -96,12 +107,16 @@ class GenerateSubscriberCommand extends Command
             return;
         }
 
+        if(! $provider) {
+            $provider = '';
+        }
+
         $io->write("The subscriber is created at this path: $path", true);
 
         $service_provider_name = $this->class_generator->get_dirname( $name );
         $id_subscriber = $this->class_generator->get_fullname($name) . '::class';
 
-        $this->service_provider_manager->maybe_generate_service_provider($name);
+        $this->service_provider_manager->maybe_generate_service_provider($name, $provider);
 
         $this->service_provider_manager->add_class($service_provider_name, $name);
 

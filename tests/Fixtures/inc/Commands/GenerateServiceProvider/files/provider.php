@@ -9,6 +9,7 @@ use PSR2Plugin\AbstractServiceProvider;
  */
 class MyProvider extends AbstractServiceProvider
 {
+
     /**
      * Registers items with the container
      *
