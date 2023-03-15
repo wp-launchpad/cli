@@ -21,7 +21,12 @@ class Test_Execute extends TestCase
         if(! $config['provider_exists']) {
             $this->filesystem->delete($config['provider_path']);
         }
-        $this->launch_app("table {$config['table']} {$config['folder']}");
+
+        if( key_exists('composer_content', $config)) {
+            $this->filesystem->put_contents($config['composer_path'], $config['composer_content']);
+        }
+
+        $this->launch_app("table {$config['table']} {$config['folder']}{$config['parameters']}");
         self::assertTrue($this->filesystem->exists($expected['query_path']));
         self::assertTrue($this->filesystem->exists($expected['row_path']));
         self::assertTrue($this->filesystem->exists($expected['table_path']));

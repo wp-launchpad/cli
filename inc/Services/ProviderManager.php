@@ -196,9 +196,21 @@ class ProviderManager
     public function instantiate(string $path, string $class) {
         $provider_path = $this->class_generator->generate_path( $path. '/ServiceProvider' );
         $provider_content = $this->filesystem->read( $provider_path );
-        $provider_content = $this->remove_anonymous_functions($provider_content);
         $full_name = $this->class_generator->get_fullname( $class );
         $id = $full_name . '::class';
+
+        if(! $this->is_autoresolver($provider_content)) {
+            $provider_content = $this->instantiate_vanilla($provider_content, $id);
+            $this->filesystem->update( $provider_path, $provider_content );
+            return;
+        }
+        $provider_content = $this->instantiate_autoresolver($provider_content, $id);
+        $this->filesystem->update( $provider_path, $provider_content );
+    }
+
+    protected function instantiate_vanilla(string $provider_content, string $id) {
+        $provider_content = $this->remove_anonymous_functions($provider_content);
+
 
         preg_match( '/\n(?<indents> *)public function define\(\)[^}]*\s*{(?<content>[^}]*)}/', $provider_content, $content );
 
@@ -207,9 +219,18 @@ class ProviderManager
 
         $provider_content = preg_replace( '/public function define\(\)[^}]*{(?<content>[^}]*)}/', "public function define()\n$indents{"."$content$indents}", $provider_content );
 
-        $provider_content = $this->reset_anonymous_functions($provider_content);
+        return $this->reset_anonymous_functions($provider_content);
+    }
 
-        $this->filesystem->update( $provider_path, $provider_content );
+    protected function instantiate_autoresolver(string $provider_content, string $id) {
+        $method = 'get_class_to_instantiate';
+        if ( ! preg_match('/\n(?<indents> *)public function ' . $method . '\(\)[^{]*{(?<content>[^}]*)}/', $provider_content, $results ) ) {
+            return $this->add_method_autoresolve($provider_content, $method, $id);
+        }
+        $indents = $results['indents'];
+        $results = $results['content'] . " " . $id . ",\n";
+        return preg_replace('/public function ' . $method . '\(\)[^}]*{(?<content>[^}]*)}/', "public function $method()\n$indents{\n$results$indents}", $provider_content);
+
     }
 
     protected function remove_anonymous_functions(string $content) {
