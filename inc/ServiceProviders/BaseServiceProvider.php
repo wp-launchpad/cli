@@ -8,7 +8,6 @@ use RocketLauncherBuilder\App;
 use RocketLauncherBuilder\Commands\GenerateFixtureCommand;
 use RocketLauncherBuilder\Commands\GenerateServiceProvider;
 use RocketLauncherBuilder\Commands\GenerateSubscriberCommand;
-use RocketLauncherBuilder\Commands\GenerateTableCommand;
 use RocketLauncherBuilder\Commands\GenerateTestsCommand;
 use RocketLauncherBuilder\Entities\Configurations;
 use RocketLauncherBuilder\Services\BootstrapManager;
@@ -98,7 +97,6 @@ class BaseServiceProvider implements ServiceProviderInterface
 
         $app->add(new GenerateSubscriberCommand($class_generator, $this->filesystem, $provider_manager, $project_manager));
         $app->add(new GenerateServiceProvider($class_generator, $this->filesystem, $this->configs, $project_manager));
-        $app->add(new GenerateTableCommand($class_generator, $this->configs, $provider_manager, $project_manager));
         $app->add(new GenerateTestsCommand($class_generator, $this->configs, $this->filesystem, $setup_generator, $fixture_generator, $content_generator, $bootstrap_manager, $project_manager));
         $app->add(new GenerateFixtureCommand($class_generator, $this->filesystem, $this->configs));
 
