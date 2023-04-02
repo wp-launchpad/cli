@@ -1,9 +1,9 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
+use LaunchpadCLI\Entities\Configurations;
 
 class ProjectManager
 {

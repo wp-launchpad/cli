@@ -1,10 +1,10 @@
 <?php
 
-namespace RocketLauncherBuilder\Tests\Unit\inc\Services\SetUpGenerator;
+namespace LaunchpadCLI\Tests\Unit\inc\Services\SetUpGenerator;
 
 use League\Flysystem\Filesystem;
 use Mockery;
-use RocketLauncherBuilder\Services\SetUpGenerator;
+use LaunchpadCLI\Services\SetUpGenerator;
 use RocketLauncherBuilder\Templating\Renderer;
 use RocketLauncherBuilder\Tests\Unit\TestCase;
 

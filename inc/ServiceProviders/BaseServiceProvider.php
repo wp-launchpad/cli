@@ -1,16 +1,16 @@
 <?php
 
-namespace RocketLauncherBuilder\ServiceProviders;
+namespace LaunchpadCLI\ServiceProviders;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\App;
-use RocketLauncherBuilder\Commands\GenerateFixtureCommand;
-use RocketLauncherBuilder\Commands\GenerateServiceProvider;
-use RocketLauncherBuilder\Commands\GenerateSubscriberCommand;
-use RocketLauncherBuilder\Commands\GenerateTableCommand;
-use RocketLauncherBuilder\Commands\GenerateTestsCommand;
-use RocketLauncherBuilder\Entities\Configurations;
+use LaunchpadCLI\App;
+use LaunchpadCLI\Commands\GenerateFixtureCommand;
+use LaunchpadCLI\Commands\GenerateServiceProvider;
+use LaunchpadCLI\Commands\GenerateSubscriberCommand;
+use LaunchpadCLI\Commands\GenerateTableCommand;
+use LaunchpadCLI\Commands\GenerateTestsCommand;
+use LaunchpadCLI\Entities\Configurations;
 use RocketLauncherBuilder\Services\BootstrapManager;
 use RocketLauncherBuilder\Services\ClassGenerator;
 use RocketLauncherBuilder\Services\ContentGenerator;

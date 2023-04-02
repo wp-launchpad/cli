@@ -1,10 +1,10 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Templating\Renderer;
 
 class ContentGenerator
 {
@@ -60,7 +60,7 @@ class ContentGenerator
      *
      * @return string
      * @throws \League\Flysystem\FileNotFoundException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     protected function generate(string $path, string $method, bool $has_return, string $template, bool $has_event = true) {
         if(! $this->filesystem->has($path)) {
@@ -118,7 +118,7 @@ class ContentGenerator
      *
      * @return string
      * @throws \League\Flysystem\FileNotFoundException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     public function generate_unit(string $path, string $method, bool $has_return) {
         return $this->generate($path, $method, $has_return, '/test/_partials/contentunit.php.tpl', false);

@@ -1,6 +1,6 @@
 {
-  "name": "crochetfeve0251/rocket-launcher-builder",
-  "description": "Builder library for psr4 plugin",
+  "name": "wp-launchpad/cli",
+  "description": "CLI library for the Launchpad framework",
   "minimum-stability": "stable",
   "license": "proprietary",
   "type": "library",
@@ -23,12 +23,12 @@
   },
   "autoload": {
     "psr-4": {
-      "RocketLauncherBuilder\\": "inc/"
+      "LaunchpadCLI\\": "inc/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "RocketLauncherBuilder\\Tests\\": "tests/"
+      "LaunchpadCLI\\Tests\\": "tests/"
     }
   }
 }

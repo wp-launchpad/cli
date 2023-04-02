@@ -1,8 +1,8 @@
 <?php
 
-namespace RocketLauncherBuilder\ServiceProviders;
+namespace LaunchpadCLI\ServiceProviders;
 
-use RocketLauncherBuilder\App;
+use LaunchpadCLI\App;
 
 interface ServiceProviderInterface
 {
