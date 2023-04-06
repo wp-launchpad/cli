@@ -1,24 +1,24 @@
 <?php
 
-namespace RocketLauncherBuilder\ServiceProviders;
+namespace LaunchpadCLI\ServiceProviders;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\App;
-use RocketLauncherBuilder\Commands\GenerateFixtureCommand;
-use RocketLauncherBuilder\Commands\GenerateServiceProvider;
-use RocketLauncherBuilder\Commands\GenerateSubscriberCommand;
-use RocketLauncherBuilder\Commands\GenerateTableCommand;
-use RocketLauncherBuilder\Commands\GenerateTestsCommand;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Services\BootstrapManager;
-use RocketLauncherBuilder\Services\ClassGenerator;
-use RocketLauncherBuilder\Services\ContentGenerator;
-use RocketLauncherBuilder\Services\FixtureGenerator;
-use RocketLauncherBuilder\Services\ProjectManager;
-use RocketLauncherBuilder\Services\ProviderManager;
-use RocketLauncherBuilder\Services\SetUpGenerator;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\App;
+use LaunchpadCLI\Commands\GenerateFixtureCommand;
+use LaunchpadCLI\Commands\GenerateServiceProvider;
+use LaunchpadCLI\Commands\GenerateSubscriberCommand;
+use LaunchpadCLI\Commands\GenerateTableCommand;
+use LaunchpadCLI\Commands\GenerateTestsCommand;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Services\BootstrapManager;
+use LaunchpadCLI\Services\ClassGenerator;
+use LaunchpadCLI\Services\ContentGenerator;
+use LaunchpadCLI\Services\FixtureGenerator;
+use LaunchpadCLI\Services\ProjectManager;
+use LaunchpadCLI\Services\ProviderManager;
+use LaunchpadCLI\Services\SetUpGenerator;
+use LaunchpadCLI\Templating\Renderer;
 
 class BaseServiceProvider implements ServiceProviderInterface
 {

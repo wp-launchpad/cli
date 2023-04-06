@@ -1,10 +1,10 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Templating\Renderer;
 
 class BootstrapManager
 {
@@ -52,7 +52,7 @@ class BootstrapManager
      *
      * @return bool
      * @throws \League\Flysystem\FileNotFoundException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     public function add_external_group(string $group) {
 

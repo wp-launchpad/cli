@@ -1,12 +1,12 @@
 <?php
 
-namespace RocketLauncherBuilder;
+namespace LaunchpadCLI;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\ServiceProviders\BaseServiceProvider;
-use RocketLauncherBuilder\ServiceProviders\ServiceProviderInterface;
-use RocketLauncherBuilder\Services\ConfigurationResolver;
+use LaunchpadCLI\ServiceProviders\BaseServiceProvider;
+use LaunchpadCLI\ServiceProviders\ServiceProviderInterface;
+use LaunchpadCLI\Services\ConfigurationResolver;
 
 class AppBuilder
 {

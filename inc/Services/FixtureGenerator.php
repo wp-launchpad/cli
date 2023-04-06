@@ -1,9 +1,9 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\Templating\Renderer;
 
 class FixtureGenerator
 {
@@ -46,7 +46,7 @@ class FixtureGenerator
      *
      * @return string
      * @throws \League\Flysystem\FileNotFoundException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     public function generate_scenarios(string $path, string $method, bool $has_return_value, array $scenarios) {
         if(! $this->filesystem->has($path)) {

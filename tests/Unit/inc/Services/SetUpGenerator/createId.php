@@ -1,15 +1,15 @@
 <?php
 
-namespace RocketLauncherBuilder\Tests\Unit\inc\Services\SetUpGenerator;
+namespace LaunchpadCLI\Tests\Unit\inc\Services\SetUpGenerator;
 
 use League\Flysystem\Filesystem;
 use Mockery;
-use RocketLauncherBuilder\Services\SetUpGenerator;
-use RocketLauncherBuilder\Templating\Renderer;
-use RocketLauncherBuilder\Tests\Unit\TestCase;
+use LaunchpadCLI\Services\SetUpGenerator;
+use LaunchpadCLI\Templating\Renderer;
+use LaunchpadCLI\Tests\Unit\TestCase;
 
 /**
- * @covers \RocketLauncherBuilder\Services\SetUpGenerator::create_id
+ * @covers \LaunchpadCLI\Services\SetUpGenerator::create_id
  *
  */
 class Test_createId extends TestCase {

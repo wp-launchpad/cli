@@ -1,6 +1,6 @@
 <?php
 
-namespace RocketLauncherBuilder\ObjectValues;
+namespace LaunchpadCLI\ObjectValues;
 
 class SubscriberType
 {

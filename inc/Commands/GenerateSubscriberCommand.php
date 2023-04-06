@@ -1,13 +1,12 @@
 <?php
 
-namespace RocketLauncherBuilder\Commands;
+namespace LaunchpadCLI\Commands;
 
 use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\ObjectValues\SubscriberType;
-use RocketLauncherBuilder\Services\ClassGenerator;
-use RocketLauncherBuilder\Services\ProviderManager;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\ObjectValues\SubscriberType;
+use LaunchpadCLI\Services\ClassGenerator;
+use LaunchpadCLI\Services\ProviderManager;
 
 /**
  * @property string|null $name Name from the subscriber to generate.

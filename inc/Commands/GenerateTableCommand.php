@@ -1,11 +1,11 @@
 <?php
 
-namespace RocketLauncherBuilder\Commands;
+namespace LaunchpadCLI\Commands;
 
 use Ahc\Cli\IO\Interactor;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Services\ClassGenerator;
-use RocketLauncherBuilder\Services\ProviderManager;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Services\ClassGenerator;
+use LaunchpadCLI\Services\ProviderManager;
 
 /**
  * @property string|null $name Name from the table to generate.

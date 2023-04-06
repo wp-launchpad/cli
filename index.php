@@ -1,6 +1,6 @@
 <?php
 
-use RocketLauncherBuilder\AppBuilder;
+use LaunchpadCLI\AppBuilder;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

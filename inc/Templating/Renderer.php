@@ -1,6 +1,6 @@
 <?php
 
-namespace RocketLauncherBuilder\Templating;
+namespace LaunchpadCLI\Templating;
 
 use League\Flysystem\Filesystem;
 

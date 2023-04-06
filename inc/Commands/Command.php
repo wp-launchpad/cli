@@ -1,10 +1,6 @@
 <?php
 
-namespace RocketLauncherBuilder\Commands;
-
-use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Templating\Renderer;
+namespace LaunchpadCLI\Commands;
 
 abstract class Command extends \Ahc\Cli\Input\Command
 {

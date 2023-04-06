@@ -1,12 +1,12 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\App;
-use RocketLauncherBuilder\Commands\GenerateServiceProvider;
-use RocketLauncherBuilder\ObjectValues\SubscriberType;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\App;
+use LaunchpadCLI\Commands\GenerateServiceProvider;
+use LaunchpadCLI\ObjectValues\SubscriberType;
+use LaunchpadCLI\Templating\Renderer;
 
 class ProviderManager
 {
@@ -151,7 +151,7 @@ class ProviderManager
      * @param string $content Content from the service provider.
      *
      * @return string
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     protected function add_to_subscriber_method(string $id, string $method, string $content): string {
         if ( ! preg_match('/\n(?<indents> *)public function ' . $method . '\(\)[^{]*{(?<content>[^}]*)}/', $content, $results ) ) {
