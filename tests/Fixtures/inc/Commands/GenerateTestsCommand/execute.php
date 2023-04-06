@@ -3,12 +3,12 @@ return [
     'vfs_dir' => '/',
     'structure' => [
         'inc' => [
-            'Plugin.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+            'Plugin.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             'Test' => [
-                'MyClass.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/my_class.php'),
+                'MyClass.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/my_class.php'),
             ]
         ],
-        'composer.json' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php'),
+        'composer.json' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/composer.php'),
         'tests' => [
             'Fixtures' => [
                 'classes' => [
@@ -16,7 +16,7 @@ return [
                 ]
             ],
             'Integration' => [
-                'bootstrap.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/integration/bootstrap.php'),
+                'bootstrap.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/integration/bootstrap.php'),
             ],
             'Unit' => [
                 'inc' => [
@@ -1169,11 +1169,11 @@ return [
                     ],
                     'tests/Integration/bootstrap.php' => [
                         'exists' => true,
-                        'content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/integration/bootstrap.php')
+                        'content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/integration/bootstrap.php')
                     ],
                     'composer.json' => [
                         'exists' => true,
-                        'content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php')
+                        'content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/composer.php')
                     ],
                 ]
             ],

@@ -4,7 +4,7 @@ return [
     'vfs_dir' => '/',
     'structure' => [
         'inc' => [
-            'Plugin.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+            'Plugin.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             'Engine' => [
                 'Test' => [
                     'Database' => [
@@ -13,7 +13,7 @@ return [
                 ]
             ]
         ],
-        'composer.json' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php'),
+        'composer.json' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/composer.php'),
         'tests' => [
             'Fixtures' => [
                 'classes' => [
@@ -78,7 +78,7 @@ return [
                 'table_content' => file_get_contents(__DIR__ . '/files/table.php'),
                 'schema_content' => file_get_contents(__DIR__ . '/files/schema.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/provider.php'),
-                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php')
+                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php')
             ]
         ],
     ]

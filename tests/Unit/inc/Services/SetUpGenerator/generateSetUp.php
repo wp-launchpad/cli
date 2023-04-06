@@ -5,11 +5,11 @@ namespace LaunchpadCLI\Tests\Unit\inc\Services\SetUpGenerator;
 use League\Flysystem\Filesystem;
 use Mockery;
 use LaunchpadCLI\Services\SetUpGenerator;
-use RocketLauncherBuilder\Templating\Renderer;
-use RocketLauncherBuilder\Tests\Unit\TestCase;
+use LaunchpadCLI\Templating\Renderer;
+use LaunchpadCLI\Tests\Unit\TestCase;
 
 /**
- * @covers \RocketLauncherBuilder\Services\SetUpGenerator::generate_set_up
+ * @covers \LaunchpadCLI\Services\SetUpGenerator::generate_set_up
  *
  */
 class Test_generateSetUp extends TestCase {
