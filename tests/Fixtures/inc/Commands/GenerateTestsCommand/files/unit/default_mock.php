@@ -37,7 +37,7 @@ class Test_myMethod extends TestCase {
         $this->r = Mockery::mock(InvalidName::class);
         $this->e_t = null;
 
-        $this->myclass = new MyClass($this->test, $this->r, $this->e_t);
+        $this->myclass = Mockery::mock(MyClass::class, [$this->test, $this->r, $this->e_t])->makePartial();
     }
 
     /**

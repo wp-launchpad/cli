@@ -251,7 +251,6 @@ class GenerateTestsCommand extends Command
         $scenarios = $this->fixture_generator->generate_scenarios($original_class_path, $method_name, $has_return, $scenarios);
 
         foreach ($files as $template => $file) {
-            $has_return = $this->fixture_generator->method_has_return($original_class_path, $method_name);
 
             $content_test = '';
 

@@ -71,8 +71,12 @@ class SetUpGenerator
         $name = str_replace('.php', '', basename($path) );
 
         $has_main_class = $this->detect_class($name, $content);
+        $has_abstract_class = $this->detect_abstract_class($name, $content);
+
+        $has_main_trait = $this->detect_trait($name, $content);
+
         $key_main_class = $this->create_id($name);
-        if(! $has_main_class) {
+        if(! $has_main_class && ! $has_main_trait) {
             return [
                 'setup' => '',
                 'usages' => $usages
@@ -86,10 +90,6 @@ class SetUpGenerator
         $init_params = '';
 
         $usages[]= trim(str_replace('/', '\\', $fullclass) ,'\\');
-
-        if(count($parameters) > 0) {
-            $usages []= 'Mockery';
-        }
 
         foreach ($parameters as $key => $type) {
             $key_without_dollar = str_replace('$', '', $key);
@@ -125,6 +125,8 @@ class SetUpGenerator
             'main_class_name' => $key_main_class,
             'main_class_type' => $name,
             'properties' => $properties,
+            'is_trait' => $has_main_trait,
+            'is_abstract' => $has_abstract_class,
             'properties_initialisation' => $properties_initialisation,
             'init_params' => trim($init_params, ', '),
         ]);
@@ -132,9 +134,17 @@ class SetUpGenerator
         $usages = array_unique($usages);
         $usages = array_filter($usages);
 
+        $usages = array_filter($usages, function ($usage) {
+            return ! $this->is_base_type($usage);
+        });
+
         $usages = array_map(function ($usage) use ($path) {
             return $this->find_fullname_class($path, $usage);
         }, $usages);
+
+        if(count($usages) > 1 || $has_abstract_class || $has_main_trait) {
+            array_unshift($usages, 'Mockery');
+        }
 
         return [
             'setup' => $setup,
@@ -198,6 +208,7 @@ class SetUpGenerator
             return $content;
         }
         $class = $results['class'] . "\n" . $setup;
+        $class = rtrim($class, " \n");
         return str_replace($results['class'], $class, $content);
     }
 
@@ -254,5 +265,16 @@ class SetUpGenerator
         $potential_path = preg_replace("#^$base_code_folder#", $base_namespace, $potential_path);
         $potential_path = str_replace('.php', '', $potential_path);
         return str_replace(DIRECTORY_SEPARATOR, '\\', $potential_path);
+    }
+
+    /**
+     * Detect if the type is a base one.
+     *
+     * @param string $type Type to check.
+     *
+     * @return bool
+     */
+    protected function is_base_type(string $type) {
+        return in_array($type, ['string', 'int', 'float', 'bool', 'array', 'boolean', 'integer', 'object']);
     }
 }

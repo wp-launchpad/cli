@@ -62,10 +62,12 @@ class Renderer
         if ( ! preg_match_all('/ *\{%[ \n]+if[ \n]+(?<condition>[^:]+):[ \n]+%\}\n?(?<content_if>[\s\S]*?)( *\n?\{%[ \n]+else[ \n]+%\}\n?(?<content_else>[\s\S]*?))? *\n?\{%[ \n]+endif[ \n]+%\}\n?/m', $content, $results)) {
             return $content;
         }
-        $ifs_mapping = array_map(function ($match) {
+        $ifs_mapping = [];
+
+        foreach ($results[0] as $match) {
             $id = uniqid('rendering_if_');
-            return [$id => $match];
-        }, $results[0]);
+            $ifs_mapping[$id] = $match;
+        }
 
         $conditions = $results['condition'];
         $contents_if = $results['content_if'];

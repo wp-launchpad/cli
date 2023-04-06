@@ -10,9 +10,9 @@ use Brain\Monkey\Name\Exception\InvalidName;
 use PSR2Plugin\Tests\Unit\TestCase;
 
 /**
- * @covers \PSR2Plugin\Test\MyClass::my_method
+ * @covers \PSR2Plugin\Test\MyClass::my_second_method
  */
-class Test_myMethod extends TestCase {
+class Test_mySecondMethod extends TestCase {
 
     /**
      * @var string
@@ -37,15 +37,15 @@ class Test_myMethod extends TestCase {
         $this->r = Mockery::mock(InvalidName::class);
         $this->e_t = null;
 
-        $this->myclass = new MyClass($this->test, $this->r, $this->e_t);
+        $this->myclass = Mockery::mock(MyClass::class, [$this->test, $this->r, $this->e_t])->makePartial();
     }
 
     /**
      * @dataProvider configTestData
      */
-    public function testShouldReturnAsExpected( $config, $expected )
+    public function testShouldDoAsExpected( $config )
     {
-        $this->assertSame($expected, $this->myclass->my_method($config['test']));
+        $this->myclass->my_second_method($config['param']);
 
     }
 }

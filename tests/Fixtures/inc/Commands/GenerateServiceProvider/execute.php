@@ -4,12 +4,12 @@ return [
     'vfs_dir' => '/',
     'structure' => [
         'inc' => [
-            'Plugin.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+            'Plugin.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             'Engine' => [
 
             ]
         ],
-        'composer.json' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/composer.php'),
+        'composer.json' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php'),
         'tests' => [
             'Fixtures' => [
                 'classes' => [

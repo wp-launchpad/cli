@@ -8,7 +8,7 @@ return [
 
             ]
         ],
-        'composer.json' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/composer.php'),
+        'composer.json' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php'),
         'tests' => [
             'Fixtures' => [
                 'classes' => [
@@ -22,7 +22,7 @@ return [
                 'inc' => [
 
                 ],
-                'bootstrap.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/unit/bootstrap.php'),
+                'bootstrap.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/unit/bootstrap.php'),
             ]
         ]
     ],

@@ -4,14 +4,14 @@ return [
     'vfs_dir' => '/',
     'structure' => [
         'inc' => [
-            'Plugin.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+            'Plugin.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             'Engine' => [
                 'Test' => [
-                    'ServiceProvider.php' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/provider.php'),
+                    'ServiceProvider.php' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/provider.php'),
                 ]
             ]
         ],
-        'composer.json' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/composer.php'),
+        'composer.json' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/composer.php'),
         'tests' => [
             'Fixtures' => [
                 'classes' => [
@@ -41,7 +41,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
         'subscriberWithoutProviderShouldCreateAndBeAddedToProvider' => [
@@ -71,7 +71,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
         'subscriberCommonShortParamShouldBeAddedAsCommon' => [
@@ -86,7 +86,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
         'subscriberFrontShouldBeAddedAsFront' => [
@@ -101,7 +101,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/front_provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
         'subscriberFrontShortParamShouldBeAddedAsFront' => [
@@ -116,7 +116,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/front_provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
         'subscriberAdminShouldBeAddedAsAdmin' => [
@@ -131,7 +131,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/admin_provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
         'subscriberAdminShortParamShouldBeAddedAsAdmin' => [
@@ -146,7 +146,7 @@ return [
                 'path' => '/inc/Engine/Test/MySubscriber.php',
                 'content' => file_get_contents(__DIR__ . '/files/subscriber.php'),
                 'provider_content' => file_get_contents(__DIR__ . '/files/admin_provider.php'),
-                'plugin_content' => file_get_contents(LAUNCHPAD_CLI_TESTS_FIXTURES_DIR . '/files/plugin.php'),
+                'plugin_content' => file_get_contents(ROCKER_LAUNCHER_BUILDER_TESTS_FIXTURES_DIR . '/files/plugin.php'),
             ]
         ],
     ]
