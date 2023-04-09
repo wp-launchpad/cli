@@ -10,6 +10,8 @@ use LaunchpadCLI\Services\ProviderManager;
 /**
  * @property string|null $name Name from the table to generate.
  * @property string|null $folder Base folder for the database files.
+ *
+ * @deprecated moved to berlindb module since 1.0.2
  */
 class GenerateTableCommand extends Command
 {
