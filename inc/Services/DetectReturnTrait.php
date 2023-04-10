@@ -1,6 +1,6 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 trait DetectReturnTrait
 {

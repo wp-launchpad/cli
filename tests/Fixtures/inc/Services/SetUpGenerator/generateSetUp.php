@@ -3,11 +3,11 @@
 $content = <<<CONTENT
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Templating\Renderer;
 
 class ClassGenerator
 {
@@ -53,7 +53,7 @@ return [
             'parameter' => 'protected $value;',
             'parameter_init' => '$this->value = Mockery::mock($this->value);',
             'setup' => '',
-            'fullclassname' => '/RocketLauncherBuilder/Services/ClassGenerator'
+            'fullclassname' => '/LaunchpadCLI/Services/ClassGenerator'
         ],
         'expected' => [
             'path' => '/inc/ClassGenerator.php',
@@ -74,14 +74,14 @@ return [
             'parameter' => 'protected $value;',
             'parameter_init' => '$this->value = Mockery::mock(Filesystem::class);',
             'setup' => $setup,
-            'fullclassname' => '/RocketLauncherBuilder/Services/ClassGenerator'
+            'fullclassname' => '/LaunchpadCLI/Services/ClassGenerator'
         ],
         'expected' => [
             'path' => '/inc/ClassGenerator.php',
             'set_up' => [
                 'setup' => $setup,
                 'usages' => [
-                    'RocketLauncherBuilder\Services\ClassGenerator',
+                    'LaunchpadCLI\Services\ClassGenerator',
                     'Mockery',
                     'League\Flysystem\Filesystem',
                 ],

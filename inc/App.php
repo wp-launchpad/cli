@@ -1,6 +1,6 @@
 <?php
 
-namespace RocketLauncherBuilder;
+namespace LaunchpadCLI;
 
 use Ahc\Cli\Application;
 use Ahc\Cli\Helper\Shell;

@@ -1,8 +1,8 @@
 <?php
 
-namespace RocketLauncherBuilder\Tests\Integration\inc\Commands\GenerateServiceProvider;
+namespace LaunchpadCLI\Tests\Integration\inc\Commands\GenerateServiceProvider;
 
-use RocketLauncherBuilder\Tests\Integration\TestCase;
+use LaunchpadCLI\Tests\Integration\TestCase;
 
 class Test_Execute extends TestCase
 {

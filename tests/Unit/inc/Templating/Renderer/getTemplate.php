@@ -1,11 +1,11 @@
 <?php
 
-namespace RocketLauncherBuilder\Tests\Unit\inc\Templating\Renderer;
+namespace LaunchpadCLI\Tests\Unit\inc\Templating\Renderer;
 
-use RocketLauncherBuilder\Tests\Unit\TestCase;
+use LaunchpadCLI\Tests\Unit\TestCase;
 
 /**
- * @covers \RocketLauncherBuilder\Templating\Renderer::get_template
+ * @covers \LaunchpadCLI\Templating\Renderer::get_template
  *
  */
 class Test_getTemplate extends TestCase {

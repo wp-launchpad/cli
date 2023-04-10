@@ -1,6 +1,6 @@
 <?php
 
-namespace RocketLauncherBuilder\Entities;
+namespace LaunchpadCLI\Entities;
 
 class Configurations
 {

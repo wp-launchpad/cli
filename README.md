@@ -1,16 +1,16 @@
-# rocket-launcher-builder
-Rocket Launcher Builder is the library containing the CLI tool used to generate new files in the Rocket Launcher project.
+# cli
+Launchpad CLI is the library containing the CLI tool used to generate new files in the Launchpad framework.
 
 ## Installation
 
-To install the library first launch the following command: `composer require CrochetFeve0251/rocket-launcher-builder --dev`
+To install the library first launch the following command: `composer require launchpad/cli --dev`
 
 Then at the root from your project you can create a `builder` file with the following content:
 ```php
 
 #!/usr/bin/php
 <?php
-use RocketLauncherBuilder\AppBuilder;
+use LaunchpadCLI\AppBuilder;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

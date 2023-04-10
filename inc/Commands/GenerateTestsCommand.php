@@ -1,16 +1,16 @@
 <?php
 
-namespace RocketLauncherBuilder\Commands;
+namespace LaunchpadCLI\Commands;
 
 use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Services\BootstrapManager;
-use RocketLauncherBuilder\Services\ClassGenerator;
-use RocketLauncherBuilder\Services\ContentGenerator;
-use RocketLauncherBuilder\Services\FixtureGenerator;
-use RocketLauncherBuilder\Services\ProjectManager;
-use RocketLauncherBuilder\Services\SetUpGenerator;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Services\BootstrapManager;
+use LaunchpadCLI\Services\ClassGenerator;
+use LaunchpadCLI\Services\ContentGenerator;
+use LaunchpadCLI\Services\FixtureGenerator;
+use LaunchpadCLI\Services\ProjectManager;
+use LaunchpadCLI\Services\SetUpGenerator;
 
 /**
  * @property string|null $method Method to generate tests for.
@@ -202,7 +202,7 @@ class GenerateTestsCommand extends Command
      * @return void
      *
      * @throws \League\Flysystem\FileNotFoundException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     protected function generate_tests(string $class_name, string $method_name, string $type, string $group, string $expected, string $external, string $original_class, array $scenarios) {
         $namespace = str_replace('\\', '/', $this->configurations->getBaseNamespace());

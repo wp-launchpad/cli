@@ -1,10 +1,10 @@
 <?php
 
-namespace RocketLauncherBuilder\Services;
+namespace LaunchpadCLI\Services;
 
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Templating\Renderer;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Templating\Renderer;
 
 class ClassGenerator
 {
@@ -121,7 +121,7 @@ class ClassGenerator
      *
      * @return false|string
      * @throws \League\Flysystem\FileExistsException
-     * @throws \RocketLauncherBuilder\Templating\FileNotFoundException
+     * @throws \LaunchpadCLI\Templating\FileNotFoundException
      */
     public function generate(string $template, string $class_name, array $variables = [], bool $is_test = false) {
         $basename = $this->get_basename( $class_name );

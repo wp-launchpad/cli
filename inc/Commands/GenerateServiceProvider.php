@@ -1,12 +1,12 @@
 <?php
 
-namespace RocketLauncherBuilder\Commands;
+namespace LaunchpadCLI\Commands;
 
 use Ahc\Cli\IO\Interactor;
 use League\Flysystem\Filesystem;
-use RocketLauncherBuilder\Entities\Configurations;
-use RocketLauncherBuilder\Services\ClassGenerator;
-use RocketLauncherBuilder\Services\ProjectManager;
+use LaunchpadCLI\Entities\Configurations;
+use LaunchpadCLI\Services\ClassGenerator;
+use LaunchpadCLI\Services\ProjectManager;
 
 /**
  * @property string|null $name Name from the service provider.

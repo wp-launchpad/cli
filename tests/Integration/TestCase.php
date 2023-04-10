@@ -1,9 +1,9 @@
 <?php
 
-namespace RocketLauncherBuilder\Tests\Integration;
+namespace LaunchpadCLI\Tests\Integration;
 
 use ReflectionObject;
-use RocketLauncherBuilder\AppBuilder;
+use LaunchpadCLI\AppBuilder;
 use WPMedia\PHPUnit\Unit\TestCase as UnitTestCase;
 use WPMedia\PHPUnit\Unit\VirtualFilesystemTestCase;
 use WPMedia\PHPUnit\VirtualFilesystemTestTrait;

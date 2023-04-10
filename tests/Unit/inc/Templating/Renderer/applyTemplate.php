@@ -1,15 +1,15 @@
 <?php
 
-namespace RocketLauncherBuilder\Tests\Unit\inc\Templating\Renderer;
+namespace LaunchpadCLI\Tests\Unit\inc\Templating\Renderer;
 
 use League\Flysystem\Filesystem;
 use Mockery;
-use RocketLauncherBuilder\Templating\FileNotFoundException;
-use RocketLauncherBuilder\Templating\Renderer;
-use RocketLauncherBuilder\Tests\Unit\TestCase;
+use LaunchpadCLI\Templating\FileNotFoundException;
+use LaunchpadCLI\Templating\Renderer;
+use LaunchpadCLI\Tests\Unit\TestCase;
 
 /**
- * @covers \RocketLauncherBuilder\Templating\Renderer::apply_template
+ * @covers \LaunchpadCLI\Templating\Renderer::apply_template
  *
  */
 class Test_applyTemplate extends TestCase {
