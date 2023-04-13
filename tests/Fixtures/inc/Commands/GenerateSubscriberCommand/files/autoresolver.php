@@ -2,7 +2,7 @@
 
 namespace PSR2Plugin\Engine\Test;
 
-class ServiceProvider extends Dependencies\RocketLauncherAutoresolver\ServiceProvider
+class ServiceProvider extends PSR2Plugin\Dependencies\RocketLauncherAutoresolver\ServiceProvider
 {
 
     /**

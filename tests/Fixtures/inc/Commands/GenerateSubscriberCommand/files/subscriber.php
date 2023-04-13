@@ -1,6 +1,6 @@
 <?php
 namespace PSR2Plugin\Engine\Test;
-use PSR2Plugin\EventManagement\SubscriberInterface;
+use PSR2Plugin\Dependencies\LaunchpadCore\EventManagement\SubscriberInterface;
 
 class MySubscriber implements SubscriberInterface {
 

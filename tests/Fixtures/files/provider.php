@@ -2,7 +2,7 @@
 
 namespace PSR2Plugin\Engine\Test;
 
-use PSR2Plugin\AbstractServiceProvider;
+use PSR2Plugin\Dependencies\LaunchpadCore\Container\AbstractServiceProvider;
 
 /**
  * Service provider.
