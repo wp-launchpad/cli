@@ -114,6 +114,10 @@ class GenerateServiceProvider extends Command
     protected function add_provider_to_plugin(string $class) {
         $plugin_path = $this->configurations->getCodeDir() . 'Plugin.php';
 
+        if(! $this->filesystem->has($plugin_path)) {
+            return;
+        }
+
         $plugin_content = $this->filesystem->read($plugin_path);
 
         preg_match('/\$providers = \[(?<content>[^]]*)];/', $plugin_content, $content);
