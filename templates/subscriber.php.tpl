@@ -1,6 +1,6 @@
 <?php
 namespace {{ namespace }};
-use {{ base_namespace }}EventManagement\SubscriberInterface;
+use {{ base_namespace }}Dependencies\LaunchpadCore\EventManagement\SubscriberInterface;
 
 class {{ class_name }} implements SubscriberInterface {
 

@@ -2,7 +2,7 @@
 
 namespace {{ namespace }};
 
-use {{ base_namespace }}AbstractServiceProvider;
+use {{ base_namespace }}Dependencies\LaunchpadCore\Container\AbstractServiceProvider;
 
 /**
  * Service provider.
