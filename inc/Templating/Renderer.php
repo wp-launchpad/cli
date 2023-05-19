@@ -87,8 +87,7 @@ class Renderer
                 $condition = str_replace("{{ $variable_name }}", $variable_value, $condition);
             }
 
-            $is_true = false;
-            eval('$is_true = (bool)' . $condition . ';');
+            $is_true = (bool) eval('return ' . $condition . ';');
             if($is_true) {
                 $content = str_replace($id, $contents_if[$index], $content);
                 continue;
