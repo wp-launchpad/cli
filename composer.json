@@ -13,7 +13,8 @@
   "require": {
     "league/flysystem": "^1.1.10",
     "adhocore/cli": "^v0.9.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "league/event": "^3.0"
   },
   "require-dev": {
     "brain/monkey": "^2.0",

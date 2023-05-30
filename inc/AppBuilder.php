@@ -2,6 +2,9 @@
 
 namespace LaunchpadCLI;
 
+use LaunchpadCLI\ServiceProviders\EventDispatcherAwareInterface;
+use LaunchpadCLI\ServiceProviders\HasSubscribersInterface;
+use League\Event\EventDispatcher;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use LaunchpadCLI\ServiceProviders\BaseServiceProvider;
@@ -45,12 +48,25 @@ class AppBuilder
         // The FilesystemOperator
         $filesystem = new Filesystem($adapter);
 
+        $event_dispatcher = new EventDispatcher();
+
         $configs = (new ConfigurationResolver($filesystem, $project_dir))->get_configuration();
         foreach ($service_providers as $service_provider) {
             $instance = new $service_provider($configs, $filesystem, __DIR__ . '/../');
             if(! $instance instanceof ServiceProviderInterface){
                 continue;
             }
+
+            if( $instance instanceof EventDispatcherAwareInterface) {
+               $instance->set_event_dispatcher($event_dispatcher);
+            }
+
+            if( $instance instanceof HasSubscribersInterface) {
+                foreach ($instance->get_subscribers() as $subscriber) {
+                    $event_dispatcher->subscribeListenersFrom($subscriber);
+                }
+            }
+
             $app = $instance->attach_commands($app);
         }
         $app->handle($_SERVER['argv']);
